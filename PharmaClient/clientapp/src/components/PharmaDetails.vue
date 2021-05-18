@@ -210,7 +210,7 @@
                             "api_key"
                         );
                         const request = new Request(
-                            "https://localhost:5001/api/pharma/2a6355929ef209c6b542004c86006909",
+                            "https://localhost:5001/api/pharma/16cf4fc6e9b2b526f9b7f69b9b0019ac",
                             {
                                 method: "GET",
                                 headers,
