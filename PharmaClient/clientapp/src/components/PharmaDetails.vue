@@ -81,6 +81,8 @@
               :items="items"
               :search="search"
               item-key="policy_type"
+              :loading="loadingvariable"
+              loading-text="Loading... Please wait"
               show-expand
               class="elevation-1"
             >
@@ -107,6 +109,7 @@ export default {
   data: () => ({
     menu2: false,
     drugdate: new Date().toISOString().substr(0, 10),
+    loadingvariable: true,
     drugName: "",
     result: "",
     valid: true,
@@ -231,15 +234,7 @@ export default {
           // set the response data
           //this.data = json;
           this.items = json.pharmaDetails;
-          //console.log(JSON.stringify(json.pharmaDetails));
-
-          //console.log(json);
-
-          //this.items = json.pharmaDetails.map((item) => {
-          //    return {
-          //        ...item
-          //    }
-          //});
+          this.loadingvariable = false;
         })
         .catch((err) => {
           console.log(err);
@@ -254,7 +249,7 @@ export default {
           }
         })
         .then(() => {
-          // loading.value = false;
+          this.loadingvariable = false;
         });
     },
   },
