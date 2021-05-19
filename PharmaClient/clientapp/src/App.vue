@@ -53,7 +53,7 @@ export default {
             drawer: false,
             items: [
                 { title: 'Calender', icon: 'mdi-view-dashboard', to: '/calender' },
-                { title: 'PharmaDetails', icon: 'mdi-image', to: '/PharmaDetails' },
+                { title: 'PharmaDetails', icon: 'mdi-image', to: '/pharmaDetails' },
                 { title: 'About', icon: 'mdi-help-box' },
             ],
             right: null  

@@ -4,8 +4,8 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 import calender from '../components/calender'
-import pharmaDetails from '../components/PharmaDetails'
-import StartService from '../components/StartService';
+import PharmaDetails from '../components/pharmaDetails'
+import StartService from '../components/StartService'
 
 const routes = [
     {
@@ -14,9 +14,9 @@ const routes = [
         path: "/calender"
     },
     {
-        component: pharmaDetails,
+        component: PharmaDetails,
         name: "PharmaDetails",
-        path: "/PharmaDetails"
+        path: "/pharmaDetails"
     },
     {
         component: StartService,
@@ -26,7 +26,7 @@ const routes = [
     {
         path: '/',
         name: 'PharmaDetails',
-        component: pharmaDetails
+        component: PharmaDetails
     }
 ];
 
