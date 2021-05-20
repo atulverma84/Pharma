@@ -1,102 +1,91 @@
 ﻿<template>
-  <v-row>
-    <v-col>
-      This is StartService component.
-    </v-col>
-    <v-form> </v-form>
-  </v-row>
-</template>
-<script>
-export default {
-  name: "StartService",
-  data: () => ({}),
-  mounted() {},
-  methods: {},
-};
-</script>
-<template>
-    <v-container>
-        <!-- Back Button -->
-        <router-link to="/calender" tag="v-btn">
-            <v-btn class="btnReturn" outlined x-small fab color="indigo">
-                <v-icon dark>
-                    mdi-arrow-left
-                </v-icon>
-                <h5>{{ this.jobTitle }}</h5>
-            </v-btn>
-        </router-link>
-        <!-- End of Back Button -->
-        <br><br>
+    <div>
+        <v-container outline>
+            <div>
+                <!-- Back Button -->
+                <v-btn fab icon large color="accent-bacg accent-2" top left @click="$router.go(-1)">
+                    <v-icon>mdi-arrow-left-bold-circle-outline</v-icon>
+                </v-btn>{{ this.jobTitle }}
+                <!-- End of Back Button -->
+                <br>
 
-        <!-- Tabs -->
-        <v-card>
-            <v-tabs grow v-model="tab" color="indigo">
-                <v-tab v-for="tab in tabs" :key="tab">
-                    <span>
-                        <v-icon>{{ tab.icon }}</v-icon> {{tab.name}}
-                    </span>
-                </v-tab>
-            </v-tabs>
+                <v-card elevation="2">
 
-            <v-tabs-items v-model="tab">
-                <!-- Start Service Tab -->
-                <v-tab-item>
-                    <v-card class="mx-auto" flat>
-                        <v-container fluid>
-                            <v-row dense>
-                                <v-col v-for="card in tilesFirstRow" :key="card.title" :cols="card.flex">
-                                    <v-card>
-                                        <v-icon>{{ card.icon }}</v-icon>
-                                        <v-card-title v-text="card.title"></v-card-title>
-                                        <v-card-text>{{ card.value }}</v-card-text>
-                                    </v-card>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col v-for="card in tilesSecondRow" :key="card.title" :cols="card.flex">
-                                    <v-card>
-                                        <v-icon>{{ card.icon }}</v-icon>
-                                        <v-card-title v-text="card.title"></v-card-title>
-                                        <v-card-text>{{ card.value }}</v-card-text>
-                                    </v-card>
-                                </v-col>
-                            </v-row>
-                        </v-container>
-                    </v-card>
+                    <!-- Tabs -->
+                    <v-tabs grow v-model="tab" center-active dark>
+                        <v-tab v-for="tab in tabs" :key="tab" @click="activeTab = tab"
+                            :class="{ isSelected: tab == activeTab, notSelected: tab != activeTab }">
+                            <span>
+                                <h4><v-icon :class="{ isSelected: tab == activeTab, notSelected: tab != activeTab }" fab>
+                                    {{ tab.icon }}</v-icon> {{tab.name}}</h4>
+                            </span>
+                        </v-tab>
+                    </v-tabs>
+                    
+                    <v-tabs-items v-model="tab">
+                        <!-- Start Service Tab -->
+                        <v-tab-item>
 
-                    <!-- Sub-caption -->
-                    <h5>{{ this.subCaption }}</h5>
-                    <!-- End of Sub-caption -->
+                            <v-container class="detailsContainer">
+                                <v-row justify="space-around" no-gutters>
+                                    <v-col v-for="tile in tiles" :key="tile" md="4" no-gutters>
+                                        <div>
+                                            <v-row max-height="40px">
+                                                <v-col md="2">
+                                                    <v-avatar color="#B7DEFF">
+                                                        <v-icon color="rgba(0, 99, 167, 1)">{{ tile.icon }}</v-icon>
+                                                    </v-avatar>
+                                                </v-col>
+                                                <v-col>
+                                                    <p class="boldHeading">{{ tile.title }}</p>
+                                                    <p>{{ tile.value }}</p>
+                                                </v-col>
+                                            </v-row>
+                                        </div>
+                                    </v-col>
+                                </v-row>
+                            </v-container>
 
-                    <!-- Start Service Button -->
-                    <div id="divStartService">
-                        <v-btn medium color="primary" dark @click="startService">
-                            Start Service
-                        </v-btn>
-                    </div>
-                    <!-- End of Start Service Button -->
+                            <!-- Sub-caption -->
+                            <div id="subCaption">
+                                <h5>{{ this.subCaption }}</h5><br />
+                            </div><br />
+                            <!-- End of Sub-caption -->
 
-                </v-tab-item>
-                <!-- End of Start Service Tab -->
+                            <!-- Start Service Button -->
+                            <div id="divStartService">
+                                <v-btn medium color="primary" dark @click="startService">
+                                    Start Service
+                                </v-btn>
+                            </div>
+                            <!-- End of Start Service Button -->
 
-                <!-- Service Book Tab -->
-                <v-tab-item>
-                    <v-card flat>
-                        <v-card-title class="headline">
-                            Service Book Title
-                        </v-card-title>
-                        <v-card-text>
-                            <service-book />
-                        </v-card-text>
-                    </v-card>
-                </v-tab-item>
-                <!-- End of Service Book Tab -->
+                            <br><br>
 
-            </v-tabs-items>
-        </v-card>
-        <!-- End of Tabs -->
-    </v-container>
+                        </v-tab-item>
+                        <!-- End of Start Service Tab -->
 
+                        <!-- Service Book Tab -->
+                        <v-tab-item>
+                            <v-card flat>
+                                <v-card-title class="headline">
+                                    Service Book Title
+                                </v-card-title>
+                                <v-card-text>
+                                    <service-book />
+                                </v-card-text>
+                            </v-card>
+                        </v-tab-item>
+                        <!-- End of Service Book Tab -->
+
+                    </v-tabs-items>
+
+                </v-card>
+            </div>
+            <!-- End of Tabs -->
+        </v-container>
+
+    </div>
 </template>
 
 <script>
@@ -112,21 +101,21 @@ export default {
                 tab: null,
                 isStartService: true,
                 isServiceBook: false,
-                active_tab: 0,
+                activeTab: 1,
                 tabs: [{
-                        index: 0,
+                        id: 1,
                         name: 'Start Service',
                         icon: 'mdi-checkbox-marked-circle'
                     },
                     {
-                        index: 1,
+                        id: 2,
                         name: 'Service Book',
                         icon: 'mdi-book-open-variant'
                     }
                 ],
                 jobTitle: 'Hospital A | Pharmacy 1',
                 subCaption: 'Scheduled Service: Full Onsite Service',
-                tilesFirstRow: [{
+                tiles: [{
                         index: 0,
                         title: 'Facility Name:',
                         value: 'Pharmacy B',
@@ -143,22 +132,21 @@ export default {
                         title: 'Customer Code:',
                         value: '2706 W Flournoy St Suite 500 Chicago, Illinois(IL), 60612',
                         icon: 'mdi-pound-box'
-                    }
-                ],
-                tilesSecondRow: [{
-                        index: 0,
+                    },
+                    {
+                        index: 3,
                         title: 'Address:',
                         value: '2706 W Flournoy St Suite 500 Chicago, Illinois(IL), 60612',
                         icon: 'mdi-map-marker'
                     },
                     {
-                        index: 1,
+                        index: 4,
                         title: 'Scheduling Contact:',
                         value: 'Chris Barnes',
-                        icon: 'mdi-human-greeting'
+                        icon: 'mdi-account'
                     },
                     {
-                        index: 2,
+                        index: 5,
                         title: 'Phone:',
                         value: '(773) 826-0000',
                         icon: 'mdi-phone'
@@ -167,7 +155,7 @@ export default {
             }
         },
         mounted() {
-
+            this.activeTab = 0
         },
         methods: {
             backToCalender() {
@@ -175,12 +163,51 @@ export default {
             },
             startService() {
                 console.log('Start Service clicked!')
+            },
+            tabSelected() {
+                this.isSelected = true
             }
         },
     }
 </script>
 
 <style>
+    h4 {
+        text-transform: none;
+    }
+
+    h5 {
+        position: static;
+        width: 538px;
+        height: 42px;
+        left: calc(50% - 538px/2);
+        top: calc(50% - 42px/2);
+        /* desktop/h5 */
+        font-family: Arial;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 20px;
+        line-height: 150%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        letter-spacing: 0.5px;
+
+        /* text/body */
+        color: #383839;
+    }
+
+    p {
+        font-family: Arial;
+        font-style: normal;
+        font-size: 14px;
+        line-height: 100%;
+        display: flex;
+        align-items: center;
+        letter-spacing: 0.5px;
+        color: #111111;
+    }
+
     .btnReturn {
         display: flex;
         align-content: center;
@@ -188,7 +215,6 @@ export default {
         border-radius: 50%;
         border-width: 2px;
         border: 2px;
-        position: static;
         left: 12.5%;
         right: 12.5%;
         top: 12.5%;
@@ -203,10 +229,9 @@ export default {
         flex-direction: column;
         align-items: flex-start;
         padding: 20px;
-
         position: static;
-        width: 1736px;
-        height: 700px;
+        width: 100%;
+        max-height: 50%;
         left: 0px;
         top: 94px;
 
@@ -228,20 +253,38 @@ export default {
         justify-content: center;
     }
 
-    h5 {
-        /* desktop/h5 */
-        font-family: Arial;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 15px;
-        line-height: 150%;
-        /* identical to box height, or 42px */
+    #subCaption {
         display: flex;
         align-items: center;
         justify-content: center;
-        letter-spacing: 0.5px;
+    }
 
-        /* text/body */
-        color: #383839;
+    .detailsContainer {
+        margin: 20px auto;
+    }
+
+    .boldHeading {
+        font-family: Arial;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 17px;
+        line-height: 160%;
+        display: flex;
+        align-items: center;
+        letter-spacing: 0.5px;
+        color: #111111;
+    }
+
+    .isSelected {
+        background-color: #0063A7;
+        color: white;
+        border-radius: 8px 0px 0px 8px;
+    }
+
+    .notSelected {
+        background-color: #EFF0F6;
+        color: #76777A !important;
+        border-radius: 8px 0px 0px 8px;
+
     }
 </style>
