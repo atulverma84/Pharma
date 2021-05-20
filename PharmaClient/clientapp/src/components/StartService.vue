@@ -139,7 +139,7 @@
                         index: 1,
                         title: 'Scheduling Contact:',
                         value: 'Chris Barnes',
-                        icon: 'mdi-human-greeting'
+                        icon: 'mdi-account'
                     },
                     {
                         index: 2,
