@@ -23,11 +23,16 @@ namespace PharmaCoreApi.Controllers
         [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] DrugDetails drugDetails)
         {
+            _logger.LogInformation("writing to text file data {0} {1}", drugDetails.DrugName, drugDetails.DrugExpiredOn);
+            _logger.LogTrace("writing to text file data {0} {1}", drugDetails.DrugName, drugDetails.DrugExpiredOn);
+
             string filePath = @"c:\FileData\Filedata.txt"; ;
             var result = await _couchRepository.WriteTextAsync(filePath, drugDetails);
             if (result.Length > 0)
             {
-                // var sResult = JsonConvert.DeserializeObject<SavedResult>(result.SuccessContentObject);
+                _logger.LogInformation("data written to file sucessfully");
+                _logger.LogTrace("data written to file sucessfully");
+
                 return Ok(result);
             }
 

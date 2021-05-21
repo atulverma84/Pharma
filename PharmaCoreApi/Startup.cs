@@ -37,6 +37,8 @@ namespace PharmaCoreApi
                         builder.WithOrigins("http://localhost:8080");
                     });
             });
+
+           // services.AddApplicationInsightsTelemetry(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +52,10 @@ namespace PharmaCoreApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute("default", "{controller}/{action}");
+            });
             app.UseCors(builder =>
             {
                 builder.WithOrigins("http://localhost:8080");
@@ -66,6 +72,7 @@ namespace PharmaCoreApi
             {
                 endpoints.MapControllers();
             });
+
         }
     }
 }

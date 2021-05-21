@@ -2,10 +2,34 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>bb2197da-9e03-4b44-9845-cda88f4848cb</UserSecretsId>
+    <ApplicationInsightsResourceId>/subscriptions/f2176852-87d8-42a7-b42b-8aa6a8ce1b9a/resourceGroups/Default-ApplicationInsights-CentralUS/providers/microsoft.insights/components/PharmaAppIn</ApplicationInsightsResourceId>
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="nlog.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\atul.verma\.nuget\packages\nlog.config\4.7.10\contentFiles\any\any\NLog.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="nlog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.17.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.NLogTarget" Version="2.17.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.12.0" />
+    <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Log\" />
   </ItemGroup>
 
 

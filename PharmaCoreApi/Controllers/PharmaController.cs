@@ -37,9 +37,44 @@ namespace PharmaCoreApi.Controllers
             return new UnprocessableEntityObjectResult(result.FailedReason);
         }
 
+        //[HttpPost]
+        [HttpPost]
+        [Route("Find")]
+        //[ActionName("Find")]
+        public async Task<IActionResult> PostFindDocument([FromBody] Query details)
+        {
+            //pharmaDetails.UpdatedOn = DateTime.Now;
+            var result = await _couchRepository.FindDocument(details);
+            if (result.IsSuccess)
+            {
+                var sResult = JsonConvert.DeserializeObject<Documents>(result.SuccessContentObject);
+                return new CreatedResult("Success", sResult);
+            }
+
+            return new UnprocessableEntityObjectResult(result.FailedReason);
+        }
+
+        //[HttpPost]
+        [HttpGet("{key}")]
+        [Route("View/{key}")]
+        //[ActionName("Find")]
+        public async Task<IActionResult> PostFindViewDocument(string key)
+        {
+            //pharmaDetails.UpdatedOn = DateTime.Now;
+            var result = await _couchRepository.GetViewAsync(key);
+            if (result.IsSuccess)
+            {
+                var sResult = JsonConvert.DeserializeObject<Documents>(result.SuccessContentObject);
+                return new CreatedResult("Success", sResult);
+            }
+
+            return new UnprocessableEntityObjectResult(result.FailedReason);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
             {
+            _logger.LogInformation("fetching data from couchDB against id {0}", id);
             var result = await _couchRepository.GetDocumentAsync(id);
             if (result.IsSuccess)
             {
@@ -49,7 +84,9 @@ namespace PharmaCoreApi.Controllers
                 dynamic task = JObject.Parse(responseString);
 
                 var sResult = JsonConvert.DeserializeObject<ListPharmaDetails>(responseString);
+                _logger.LogInformation("Data from couchDb fetched against id {0}", id);
                 return new OkObjectResult(sResult);
+                
             }
             return new NotFoundObjectResult("NotFound");
         }

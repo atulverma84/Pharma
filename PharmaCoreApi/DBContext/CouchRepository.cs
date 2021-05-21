@@ -1,12 +1,19 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using PharmaCoreApi.Helper;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PharmaCoreApi.Models
@@ -69,6 +76,66 @@ namespace PharmaCoreApi.Models
                 response.FailedReason = dbResult.ReasonPhrase;
             }
             return response;
+        }
+
+        public async Task<HttpClientResponse> GetViewAsync(string key)
+        {
+            HttpClientResponse response = new HttpClientResponse();
+            var dbClient = DbHttpClient();
+
+            //CouchDB URL : GET http://{hostname_or_IP}:{Port}/{couchDbName}/{_id}  
+            var dbResult = await dbClient.GetAsync(_couchDbName + "/_design/ProductName/_view/ProductName-view?key=" + key);
+            if (dbResult.IsSuccessStatusCode)
+            {
+                response.IsSuccess = true;
+                response.SuccessContentObject = await dbResult.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                response.IsSuccess = false;
+                response.FailedReason = dbResult.ReasonPhrase;
+            }
+            return response;
+        }
+
+        public async Task<HttpClientResponse> FindDocument(Query str)
+        {
+            HttpClientResponse response = new HttpClientResponse();
+            var dbClient = DbHttpClient();            
+            var jsonData = JsonConvert.SerializeObject(str);           
+            var httpContent = new StringContent(jsonData, Encoding.UTF8, "application/json");            
+            var dbResult = await dbClient.PostAsync(_couchDbName + "/_find", httpContent).ConfigureAwait(true);
+
+            if (dbResult.IsSuccessStatusCode)
+            {
+                response.IsSuccess = true;
+                response.SuccessContentObject = await dbResult.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                response.IsSuccess = false;
+                response.FailedReason = dbResult.ReasonPhrase;
+            }
+            return response;
+        }
+
+        private dynamic AttachmentsSelector()
+        {
+            
+            var selector = new
+            {
+                selector = new
+                {
+                    _id = "1000004606",
+                    //_attachments = isExists
+                },
+                fields = new ArrayList {
+                "_id",
+                "_rev"
+               
+            }
+            };
+            return selector;
         }
 
         public async Task<HttpClientResponse> PostDocumentAsync(PharmaDetails pharmaDetails)
@@ -142,20 +209,24 @@ namespace PharmaCoreApi.Models
 
         public async Task<string> WriteTextAsync(string filePath, DrugDetails drugDetails)
         {
-            string text = drugDetails.DrugName + "   " + drugDetails.DrugExpiredOn + Environment.NewLine;
-            byte[] encodedText = Encoding.UTF8.GetBytes(text);
-
-            using (FileStream sourceStream = new FileStream(filePath,
-                FileMode.Append, FileAccess.Write, FileShare.None,
-                bufferSize: 4096, useAsync: true)) 
-            {              
-                string returnValue = System.Convert.ToBase64String(encodedText);
-                byte[] info = new UTF8Encoding(true).GetBytes(returnValue);
-                await sourceStream.WriteAsync(info, 0, info.Length);
-                
-                return "success";
-            };
+            bool isAddedOrAppended = false;
+            string text = drugDetails.DrugName + " " + drugDetails.DrugExpiredOn + Environment.NewLine;
            
+            string SAMPLE_KEY = "gCjK+DZ/GCYbKIGiAt1qCA==";
+            string SAMPLE_IV = "47l5QsSe1POo31adQ/u7nQ==";
+
+            var key = Encoding.UTF8.GetBytes(SAMPLE_KEY);
+            var iv = Encoding.UTF8.GetBytes(SAMPLE_IV);
+
+            Array.Resize(ref key, 128 / 8);
+            Array.Resize(ref iv, 128 / 8);
+
+            if ( File.Exists(filePath) && File.ReadLines(filePath).Any(line => line.Length > 0))
+                isAddedOrAppended = await StreamHelper.AppendStringToFile(filePath, text, key, iv);            
+            else
+                isAddedOrAppended = await StreamHelper.WriteStringToFile(filePath, text, key, iv);
+                      
+            return isAddedOrAppended ? "success" : "failure";          
         }
 
         private HttpClient DbHttpClient()
