@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog;
+using NLog.Extensions.Logging;
+using PharmaCoreApi.Helper;
 using PharmaCoreApi.Models;
 using System;
 using System.Collections.Generic;
@@ -18,8 +21,11 @@ namespace PharmaCoreApi
     {
         public Startup(IConfiguration configuration)
         {
+           
             Configuration = configuration;
         }
+
+        private static readonly NLog.ILogger logger = LogManager.GetCurrentClassLogger();
 
         public IConfiguration Configuration { get; }
 
@@ -44,12 +50,14 @@ namespace PharmaCoreApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+          
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseHttpsRedirection();
+            app.ConfigureExceptionHandler(logger);
 
             app.UseRouting();
             app.UseEndpoints(endpoints =>

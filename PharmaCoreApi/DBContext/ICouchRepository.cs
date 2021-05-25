@@ -12,7 +12,8 @@ namespace PharmaCoreApi.Models
         Task<HttpClientResponse> FindDocument(Query pharmaDetails);
         Task<HttpClientResponse> PutDocumentAsync(UpdatePharmaDetails update);
         Task<HttpClientResponse> GetDocumentAsync(string id);
-        Task<HttpClientResponse> GetViewAsync(string key);
+        Task<HttpClientResponse> GetAllDocumentsAsync();
+        Task<HttpClientResponse> GetViewAsync(QueryView key);
         Task<HttpClientResponse> DeleteDocumentAsync(string id, string rev);
         Task<string> WriteTextAsync(string filePath, DrugDetails drugDetails);
 

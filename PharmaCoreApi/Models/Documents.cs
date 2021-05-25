@@ -7,11 +7,16 @@ namespace PharmaCoreApi.Models
 {
     public class Documents
     {
-        public Document[] documents;
+        public string total_rows { get; set; }
+        public string offset { get; set; }
+
+        public List<rows> rows { get; set; }
     }
 
-    public class Document
+    public class rows
     {
-        public Dictionary<string, string> document;
+        public string id { get; set; }
+        public string key { get; set; }
+        public string value { get; set; }
     }
 }

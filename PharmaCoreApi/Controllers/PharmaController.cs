@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using PharmaCoreApi.Helper;
 using PharmaCoreApi.Models;
 using System;
 using System.Collections.Generic;
@@ -54,26 +55,40 @@ namespace PharmaCoreApi.Controllers
             return new UnprocessableEntityObjectResult(result.FailedReason);
         }
 
-        //[HttpPost]
-        [HttpGet("{key}")]
-        [Route("View/{key}")]
-        //[ActionName("Find")]
-        public async Task<IActionResult> PostFindViewDocument(string key)
+
+        [HttpGet()]
+        [Route("View")]
+        public async Task<IActionResult> PostFindViewDocument([FromBody] QueryView key)
         {
-            //pharmaDetails.UpdatedOn = DateTime.Now;
+            _logger.LogInformation("Finding results in documents");
             var result = await _couchRepository.GetViewAsync(key);
             if (result.IsSuccess)
             {
-                var sResult = JsonConvert.DeserializeObject<Documents>(result.SuccessContentObject);
-                return new CreatedResult("Success", sResult);
+                var sResult = JsonConvert.DeserializeObject<Documents>(result.SuccessContentObject, new TrimmingConverter());
+                return Ok(sResult);
             }
 
-            return new UnprocessableEntityObjectResult(result.FailedReason);
+            return BadRequest(result);
+        }
+
+        [HttpGet]
+        [Route("GetAll")]
+        public async Task<IActionResult> Get()
+        {
+            _logger.LogInformation("fetching all documents from couchDB against");
+            var result = await _couchRepository.GetAllDocumentsAsync();
+            if (result.IsSuccess)
+            {
+                var responseString = result.SuccessContentObject;
+                var sResult = JsonConvert.DeserializeObject(responseString);
+                return new OkObjectResult(sResult);
+            }
+            return new NotFoundObjectResult("NotFound");
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
-            {
+        {
             _logger.LogInformation("fetching data from couchDB against id {0}", id);
             var result = await _couchRepository.GetDocumentAsync(id);
             if (result.IsSuccess)
@@ -86,7 +101,7 @@ namespace PharmaCoreApi.Controllers
                 var sResult = JsonConvert.DeserializeObject<ListPharmaDetails>(responseString);
                 _logger.LogInformation("Data from couchDb fetched against id {0}", id);
                 return new OkObjectResult(sResult);
-                
+
             }
             return new NotFoundObjectResult("NotFound");
         }

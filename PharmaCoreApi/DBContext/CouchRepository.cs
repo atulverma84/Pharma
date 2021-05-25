@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -18,17 +19,18 @@ using System.Threading.Tasks;
 
 namespace PharmaCoreApi.Models
 {
-    public class CouchRepository : ICouchRepository   
+    public class CouchRepository : ICouchRepository
     {
-
+        private readonly ILogger<CouchRepository> _logger;
         private readonly string _couchDbUrl;
         private readonly string _couchDbName;
         private readonly string _couchDbUser;
         private readonly IConfiguration _configuration;
         private readonly IHttpClientFactory _clientFactory;
-        public CouchRepository(IConfiguration configuration, IHttpClientFactory clientFactory)
-        {
 
+        public CouchRepository(IConfiguration configuration, IHttpClientFactory clientFactory, ILogger<CouchRepository> logger)
+        {
+            _logger = logger;
             _configuration = configuration;
             _clientFactory = clientFactory;
             _couchDbUrl = this._configuration["CouchDB:URL"];
@@ -57,34 +59,13 @@ namespace PharmaCoreApi.Models
             return response;
         }
 
-        public async Task<HttpClientResponse> GetDocumentAsync(string id)
+        public async Task<HttpClientResponse> GetAllDocumentsAsync()
         {
             HttpClientResponse response = new HttpClientResponse();
             var dbClient = DbHttpClient();
 
-            //CouchDB URL : GET http://{hostname_or_IP}:{Port}/{couchDbName}/{_id}  
-            var dbResult = await dbClient.GetAsync(_couchDbName + "/" + id);
+            var dbResult = await dbClient.GetAsync(_couchDbName + "/_all_docs");
 
-            if (dbResult.IsSuccessStatusCode)
-            {
-                response.IsSuccess = true;
-                response.SuccessContentObject = await dbResult.Content.ReadAsStringAsync();                
-            }
-            else
-            {
-                response.IsSuccess = false;
-                response.FailedReason = dbResult.ReasonPhrase;
-            }
-            return response;
-        }
-
-        public async Task<HttpClientResponse> GetViewAsync(string key)
-        {
-            HttpClientResponse response = new HttpClientResponse();
-            var dbClient = DbHttpClient();
-
-            //CouchDB URL : GET http://{hostname_or_IP}:{Port}/{couchDbName}/{_id}  
-            var dbResult = await dbClient.GetAsync(_couchDbName + "/_design/ProductName/_view/ProductName-view?key=" + key);
             if (dbResult.IsSuccessStatusCode)
             {
                 response.IsSuccess = true;
@@ -98,12 +79,55 @@ namespace PharmaCoreApi.Models
             return response;
         }
 
+        public async Task<HttpClientResponse> GetDocumentAsync(string id)
+        {
+            HttpClientResponse response = new HttpClientResponse();
+            var dbClient = DbHttpClient();
+
+            var dbResult = await dbClient.GetAsync(_couchDbName + "/" + id);
+
+            if (dbResult.IsSuccessStatusCode)
+            {
+                response.IsSuccess = true;
+                response.SuccessContentObject = await dbResult.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                response.IsSuccess = false;
+                response.FailedReason = dbResult.ReasonPhrase;
+            }
+            return response;
+        }
+
+        public async Task<HttpClientResponse> GetViewAsync(QueryView queryView)
+        {
+            HttpClientResponse response = new HttpClientResponse();
+
+            var dbClient = DbHttpClient();
+            var queryParameters = queryView.Filters.GetQueryString();
+
+            var dbResult = await dbClient.GetAsync(_couchDbName + "/_design/" + queryView.DesignDocumentName + "/_view/" + queryView.ViewName + queryParameters);
+            if (dbResult.IsSuccessStatusCode)
+            {
+                response.IsSuccess = true;
+                response.SuccessContentObject = await dbResult.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                response.IsSuccess = false;
+                response.FailedReason = dbResult.ReasonPhrase;
+                throw new Exception(String.Format("{0} {1} {2}", dbResult.ReasonPhrase, dbResult.Content.ReadAsStringAsync(), dbResult.StatusCode));
+            }
+
+            return response;
+        }
+
         public async Task<HttpClientResponse> FindDocument(Query str)
         {
             HttpClientResponse response = new HttpClientResponse();
-            var dbClient = DbHttpClient();            
-            var jsonData = JsonConvert.SerializeObject(str);           
-            var httpContent = new StringContent(jsonData, Encoding.UTF8, "application/json");            
+            var dbClient = DbHttpClient();
+            var jsonData = JsonConvert.SerializeObject(str);
+            var httpContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
             var dbResult = await dbClient.PostAsync(_couchDbName + "/_find", httpContent).ConfigureAwait(true);
 
             if (dbResult.IsSuccessStatusCode)
@@ -121,7 +145,7 @@ namespace PharmaCoreApi.Models
 
         private dynamic AttachmentsSelector()
         {
-            
+
             var selector = new
             {
                 selector = new
@@ -132,7 +156,7 @@ namespace PharmaCoreApi.Models
                 fields = new ArrayList {
                 "_id",
                 "_rev"
-               
+
             }
             };
             return selector;
@@ -164,7 +188,7 @@ namespace PharmaCoreApi.Models
                 }
             }
             catch (WebException exception)
-            {               
+            {
                 using (var reader = new StreamReader(exception.Response.GetResponseStream()))
                 {
                     response.FailedReason = reader.ReadToEnd();
@@ -172,7 +196,7 @@ namespace PharmaCoreApi.Models
                 }
             }
 
-           
+
             return response;
         }
 
@@ -183,7 +207,7 @@ namespace PharmaCoreApi.Models
             var updateToDb = new
             {
                 update.Name,
-                update.ExpiredOn,              
+                update.ExpiredOn,
                 update.UpdatedOn
             };
             var jsonData = JsonConvert.SerializeObject(updateToDb);
@@ -211,7 +235,7 @@ namespace PharmaCoreApi.Models
         {
             bool isAddedOrAppended = false;
             string text = drugDetails.DrugName + " " + drugDetails.DrugExpiredOn + Environment.NewLine;
-           
+
             string SAMPLE_KEY = "gCjK+DZ/GCYbKIGiAt1qCA==";
             string SAMPLE_IV = "47l5QsSe1POo31adQ/u7nQ==";
 
@@ -221,12 +245,12 @@ namespace PharmaCoreApi.Models
             Array.Resize(ref key, 128 / 8);
             Array.Resize(ref iv, 128 / 8);
 
-            if ( File.Exists(filePath) && File.ReadLines(filePath).Any(line => line.Length > 0))
-                isAddedOrAppended = await StreamHelper.AppendStringToFile(filePath, text, key, iv);            
+            if (File.Exists(filePath) && File.ReadLines(filePath).Any(line => line.Length > 0))
+                isAddedOrAppended = await StreamHelper.AppendStringToFile(filePath, text, key, iv);
             else
                 isAddedOrAppended = await StreamHelper.WriteStringToFile(filePath, text, key, iv);
-                      
-            return isAddedOrAppended ? "success" : "failure";          
+
+            return isAddedOrAppended ? "success" : "failure";
         }
 
         private HttpClient DbHttpClient()
