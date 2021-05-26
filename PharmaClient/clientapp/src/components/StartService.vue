@@ -12,12 +12,11 @@
                 <v-card elevation="2">
 
                     <!-- Tabs -->
-                    <v-tabs grow v-model="tab" center-active dark>
-                        <v-tab v-for="tab in tabs" :key="tab" @click="activeTab = tab"
-                            :class="{ isSelected: tab == activeTab, notSelected: tab != activeTab }">
+                    <v-tabs v-model="tab" grow light activeTab>
+                        <v-tab v-for="tab in tabs" :key="tab" @click="this.isActive = true"
+                            :class="{ tabSelected: tab == activeTab }">
                             <span>
-                                <h4><v-icon :class="{ isSelected: tab == activeTab, notSelected: tab != activeTab }" fab>
-                                    {{ tab.icon }}</v-icon> {{tab.name}}</h4>
+                                <h4><v-icon fab>{{ tab.icon }}</v-icon> {{tab.name}}</h4>
                             </span>
                         </v-tab>
                     </v-tabs>
@@ -68,8 +67,7 @@
                         <!-- Service Book Tab -->
                         <v-tab-item>
                             <v-card flat>
-                                <v-card-title class="headline">
-                                    Service Book Title
+                                <v-card-title class="headline">                                   
                                 </v-card-title>
                                 <v-card-text>
                                     <service-book />
@@ -92,23 +90,22 @@
     import ServiceBook from './ServiceBook.vue'
 
     export default {
-        name: "Services",
+        name: "StartService",
         components: {
             'service-book': ServiceBook
         },
         data() {
             return {
                 tab: null,
-                isStartService: true,
-                isServiceBook: false,
-                activeTab: 1,
+                isActive: false,
+                activeTab: 0,
                 tabs: [{
-                        id: 1,
-                        name: 'Start Service',
+                        id: 0,
+                        name: 'Service Information',
                         icon: 'mdi-checkbox-marked-circle'
                     },
                     {
-                        id: 2,
+                        id: 1,
                         name: 'Service Book',
                         icon: 'mdi-book-open-variant'
                     }
@@ -165,7 +162,7 @@
                 console.log('Start Service clicked!')
             },
             tabSelected() {
-                this.isSelected = true
+                this.isActive = true
             }
         },
     }
@@ -275,16 +272,12 @@
         color: #111111;
     }
 
-    .isSelected {
-        background-color: #0063A7;
+    .tabSelected, .v-tab--active {
+        background-color: rgba(0, 99, 167, 1);
         color: white;
-        border-radius: 8px 0px 0px 8px;
     }
 
-    .notSelected {
-        background-color: #EFF0F6;
-        color: #76777A !important;
-        border-radius: 8px 0px 0px 8px;
-
+    .v-tab--active h4 {
+        color: white;
     }
 </style>
