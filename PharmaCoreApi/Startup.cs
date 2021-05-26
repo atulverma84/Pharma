@@ -13,6 +13,7 @@ using PharmaCoreApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace PharmaCoreApi
@@ -32,9 +33,19 @@ namespace PharmaCoreApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var _couchDbUser = Configuration["CouchDB:User"];
+            var dbUserByteArray = Encoding.ASCII.GetBytes(_couchDbUser);
+            
+
             services.AddControllers();
             services.AddHttpClient();
-            services.AddTransient<ICouchRepository, CouchRepository>();
+            services.AddSingleton<ICouchRepository, CouchRepository>();
+            services.AddHttpClient("Couchdb",c =>
+            {
+                c.BaseAddress = new Uri(Configuration["CouchDB:URL"]);
+                c.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(dbUserByteArray));
+            });
+
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -56,14 +67,8 @@ namespace PharmaCoreApi
                 app.UseDeveloperExceptionPage();
             }
             
-            app.UseHttpsRedirection();
             app.ConfigureExceptionHandler(logger);
-
             app.UseRouting();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute("default", "{controller}/{action}");
-            });
             app.UseCors(builder =>
             {
                 builder.WithOrigins("http://localhost:8080");

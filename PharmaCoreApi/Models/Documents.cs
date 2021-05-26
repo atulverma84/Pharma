@@ -17,6 +17,16 @@ namespace PharmaCoreApi.Models
     {
         public string id { get; set; }
         public string key { get; set; }
-        public string value { get; set; }
+        public value value { get; set; }
+    }
+
+    public class value
+    {
+        public string _id { get; set; }
+        public string DNdcNbr { get; set; }
+        public string DManName { get; set; }
+        public string DFormCode { get; set; }
+        public string DStrength { get; set; }
+
     }
 }

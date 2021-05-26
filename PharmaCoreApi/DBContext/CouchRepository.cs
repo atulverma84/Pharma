@@ -28,11 +28,15 @@ namespace PharmaCoreApi.Models
         private readonly IConfiguration _configuration;
         private readonly IHttpClientFactory _clientFactory;
 
+        // _httpClient isn't exposed publicly
+       // private readonly HttpClient _httpClient;
+
         public CouchRepository(IConfiguration configuration, IHttpClientFactory clientFactory, ILogger<CouchRepository> logger)
         {
             _logger = logger;
             _configuration = configuration;
-            _clientFactory = clientFactory;
+           // _httpClient = client;
+             _clientFactory = clientFactory;
             _couchDbUrl = this._configuration["CouchDB:URL"];
             _couchDbName = this._configuration["CouchDB:DbName"];
             _couchDbUser = this._configuration["CouchDB:User"];
@@ -41,10 +45,10 @@ namespace PharmaCoreApi.Models
         public async Task<HttpClientResponse> DeleteDocumentAsync(string id, string rev)
         {
             HttpClientResponse response = new HttpClientResponse();
-            var dbClient = DbHttpClient();
+            var _httpClient = _clientFactory.CreateClient("Couchdb");
 
             //CouchDB URL : DELETE http://{hostname_or_IP}:{Port}/{couchDbName}/{_id}/?rev={_rev}  
-            var dbResult = await dbClient.DeleteAsync(_couchDbName + "/" + id + "?rev=" + rev);
+            var dbResult = await _httpClient.DeleteAsync(_couchDbName + "/" + id + "?rev=" + rev);
 
             if (dbResult.IsSuccessStatusCode)
             {
@@ -62,9 +66,9 @@ namespace PharmaCoreApi.Models
         public async Task<HttpClientResponse> GetAllDocumentsAsync()
         {
             HttpClientResponse response = new HttpClientResponse();
-            var dbClient = DbHttpClient();
+            var _httpClient = _clientFactory.CreateClient("Couchdb");
 
-            var dbResult = await dbClient.GetAsync(_couchDbName + "/_all_docs");
+            var dbResult = await _httpClient.GetAsync(_couchDbName + "/_all_docs");
 
             if (dbResult.IsSuccessStatusCode)
             {
@@ -82,9 +86,8 @@ namespace PharmaCoreApi.Models
         public async Task<HttpClientResponse> GetDocumentAsync(string id)
         {
             HttpClientResponse response = new HttpClientResponse();
-            var dbClient = DbHttpClient();
-
-            var dbResult = await dbClient.GetAsync(_couchDbName + "/" + id);
+            var _httpClient = _clientFactory.CreateClient("Couchdb");
+            var dbResult = await _httpClient.GetAsync(_couchDbName + "/" + id);
 
             if (dbResult.IsSuccessStatusCode)
             {
@@ -101,12 +104,15 @@ namespace PharmaCoreApi.Models
 
         public async Task<HttpClientResponse> GetViewAsync(QueryView queryView)
         {
+            _logger.LogInformation("starting in FindDocument.");
             HttpClientResponse response = new HttpClientResponse();
-
-            var dbClient = DbHttpClient();
+            _logger.LogInformation("starting httpclient from clientfactory.");
+            var _httpClient = _clientFactory.CreateClient("Couchdb");
+            _logger.LogInformation("Completed httpclient from clientfactory.");
             var queryParameters = queryView.Filters.GetQueryString();
-
-            var dbResult = await dbClient.GetAsync(_couchDbName + "/_design/" + queryView.DesignDocumentName + "/_view/" + queryView.ViewName + queryParameters);
+            _logger.LogInformation("Fetching data from client");
+            var dbResult = await _httpClient.GetAsync(_couchDbName + "/_design/" + queryView.DesignDocumentName + "/_view/" + queryView.ViewName + queryParameters);
+            _logger.LogInformation("Fetched data from client");
             if (dbResult.IsSuccessStatusCode)
             {
                 response.IsSuccess = true;
@@ -124,12 +130,17 @@ namespace PharmaCoreApi.Models
 
         public async Task<HttpClientResponse> FindDocument(Query str)
         {
+            _logger.LogInformation("starting in FindDocument.");
             HttpClientResponse response = new HttpClientResponse();
-            var dbClient = DbHttpClient();
+
+            _logger.LogInformation("starting httpclient from clientfactory.");
+             var _httpClient = _clientFactory.CreateClient("Couchdb");
+            _logger.LogInformation("Completed httpclient from clientfactory.");
             var jsonData = JsonConvert.SerializeObject(str);
             var httpContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var dbResult = await dbClient.PostAsync(_couchDbName + "/_find", httpContent).ConfigureAwait(true);
-
+            _logger.LogInformation("Fetching data from client");
+            var dbResult = await _httpClient.PostAsync(_couchDbName + "/_find", httpContent).ConfigureAwait(true);
+            _logger.LogInformation("Fetched data from client");
             if (dbResult.IsSuccessStatusCode)
             {
                 response.IsSuccess = true;
@@ -169,12 +180,12 @@ namespace PharmaCoreApi.Models
             try
             {
                 response = new HttpClientResponse();
-                var dbClient = DbHttpClient();
+                 var _httpClient = _clientFactory.CreateClient("Couchdb");
                 var jsonData = JsonConvert.SerializeObject(pharmaDetails);
                 var httpContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
                 //CouchDB URL : POST http://{hostname_or_IP}:{Port}/{couchDbName}  
-                var postResult = await dbClient.PostAsync(_couchDbName, httpContent).ConfigureAwait(true);
+                var postResult = await _httpClient.PostAsync(_couchDbName, httpContent).ConfigureAwait(true);
 
                 if (postResult.IsSuccessStatusCode)
                 {
@@ -203,7 +214,7 @@ namespace PharmaCoreApi.Models
         public async Task<HttpClientResponse> PutDocumentAsync(UpdatePharmaDetails update)
         {
             HttpClientResponse response = new HttpClientResponse();
-            var dbClient = DbHttpClient();
+             var _httpClient = _clientFactory.CreateClient("Couchdb");
             var updateToDb = new
             {
                 update.Name,
@@ -214,7 +225,7 @@ namespace PharmaCoreApi.Models
             var httpContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
             //CouchDB URL : PUT http://{hostname_or_IP}:{Port}/{couchDbName}/{_id}/?rev={_rev}  
-            var putResult = await dbClient.PutAsync(_couchDbName + "/" +
+            var putResult = await _httpClient.PutAsync(_couchDbName + "/" +
                                                       update.Id +
                                                       "?rev=" + update.Rev, httpContent).ConfigureAwait(true);
 
@@ -253,16 +264,16 @@ namespace PharmaCoreApi.Models
             return isAddedOrAppended ? "success" : "failure";
         }
 
-        private HttpClient DbHttpClient()
-        {
-            var httpClient = this._clientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Clear();
+        //private HttpClient DbHttpClient()
+        //{
+        //    var httpClient = this._clientFactory.CreateClient();
+        //    httpClient.DefaultRequestHeaders.Accept.Clear();
+        //    httpClient.DefaultRequestHeaders.Clear();
 
-            httpClient.BaseAddress = new Uri(_couchDbUrl);
-            var dbUserByteArray = Encoding.ASCII.GetBytes(_couchDbUser);
-            httpClient.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(dbUserByteArray));
-            return httpClient;
-        }
+        //    httpClient.BaseAddress = new Uri(_couchDbUrl);
+        //    var dbUserByteArray = Encoding.ASCII.GetBytes(_couchDbUser);
+        //    httpClient.DefaultRequestHeaders.Add("Authorization", "Basic " + Convert.ToBase64String(dbUserByteArray));
+        //    return httpClient;
+        //}
     }
 }
