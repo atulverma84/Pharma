@@ -20,7 +20,7 @@ namespace PharmaCoreApi.Helper
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {           
-           if (reader.Value.GetType() == typeof(Int64) &&  Convert.ToInt64(reader.Value) > 0)
+           if (reader.Value != null && reader.Value.GetType() == typeof(Int64))
                     return Convert.ToString(reader.Value);
 
           return  TrimInputField((string)reader.Value);
