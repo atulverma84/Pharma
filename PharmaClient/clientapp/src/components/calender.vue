@@ -1,298 +1,574 @@
-<template>
-    <v-row class="fill-height">
-        <v-col>
-            <v-sheet height="64">
-                <v-toolbar flat>
-                    <v-btn outlined
-                           class="mr-4"
-                           color="grey darken-2"
-                           @click="setToday">
-                        Today
-                    </v-btn>
-                    <v-btn fab
-                           text
-                           small
-                           color="grey darken-2"
-                           @click="prev">
-                        <v-icon small>
-                            mdi-chevron-left
-                        </v-icon>
-                    </v-btn>
-                    <v-btn fab
-                           text
-                           small
-                           color="grey darken-2"
-                           @click="next">
-                        <v-icon small>
-                            mdi-chevron-right
-                        </v-icon>
-                    </v-btn>
-                    <v-toolbar-title v-if="$refs.calendar">
-                        {{ $refs.calendar.title }}
-                    </v-toolbar-title>
-                    <v-spacer></v-spacer>
-                    <v-menu bottom
-                            right>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn outlined
-                                   color="grey darken-2"
-                                   v-bind="attrs"
-                                   v-on="on">
-                                <span>{{ typeToLabel[type] }} </span>
-                                <v-icon right>
-                                    mdi-menu-down
-                                </v-icon>
-                            </v-btn>
-                        </template>
-                        <v-list>
-                            <v-list-item @click="type = 'day'">
-                                <v-list-item-title>Day</v-list-item-title>
-                            </v-list-item>
-                            <v-list-item @click="type = 'week'">
-                                <v-list-item-title>Week</v-list-item-title>
-                            </v-list-item>
-                            <v-list-item @click="type = 'month'">
-                                <v-list-item-title>Month</v-list-item-title>
-                            </v-list-item>
-                            <v-list-item @click="type = '4day'">
-                                <v-list-item-title>4 days</v-list-item-title>
-                            </v-list-item>
-                        </v-list>
-                    </v-menu>
-                </v-toolbar>
-            </v-sheet>
-            <v-sheet height="600">
-                <v-calendar ref="calendar"
-                            v-model="focus"
-                            color="primary"
-                            :events="events"
-                            :event-color="getEventColor"
-                            :type="type"
-                            @click:event="showEvent"
-                            @click:more="viewDay"
-                            @click:date="viewDay"
-                            @change="updateRange">
-                    <template v-slot:event="{event}">
-                        <v-row class="text-left">
-                            <v-col class="mb-0" cols="9">
-                                <div :style="{color:'black'}" class="fill-height pl-2">
-                                    <p style="font-family: Arial; font-style: normal; font-weight: bold; font-size: 16px; line-height: 100%; display: flex; align-items: center; letter-spacing: 1px;"> {{ event.name }} </p>
-                                   
+<style>
+/* div .theme--light.v-calendar-events .v-event-timed {
+        border-radius: 8px;
+        border-left: 8px solid blue !important;
+    }*/
+.complete {
+  border-left: 8px solid #0dba61 !important;
+  height: 100%;
+  width: 100%;
+}
 
-                                </div>
-                            </v-col>
-                            <v-col class="mb-0 text-right">
-                                <v-btn depressed style="vertical-align:top" to="/StartService" @click.native.stop>
-                                    Start Service
-                                    <v-icon dark
-                                            right>
-                                        mdi-arrow-right
-                                    </v-icon>
-                                </v-btn>
-                            </v-col>
+.cancelled {
+  border-left: 8px solid #b30000 !important;
+  height: 100%;
+  width: 100%;
+}
+
+.confirmed {
+  border-left: 8px solid #0063a7 !important;
+  height: 100%;
+  width: 100%;
+}
+
+.unconfirmed {
+  border-left: 8px solid #76777a !important;
+  height: 100%;
+  width: 100%;
+}
+
+.event-header-time {
+  font-size: 16px;
+  margin-bottom: 5px !important;
+}
+
+.event-header-name {
+  font-size: 18px;
+  margin-bottom: 5px !important;
+}
+
+.event-header-btn {
+  text-transform: none !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+}
+.maxDiv {
+  height: 100%;
+  width: 100%;
+}
+</style>
+<template>
+  <v-row class="fill-height">
+    <v-col>
+      <v-sheet height="64">
+        <v-toolbar flat>
+          <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
+            Today
+          </v-btn>
+          <v-btn fab text small color="grey darken-2" @click="prev">
+            <v-icon small> mdi-chevron-left </v-icon>
+          </v-btn>
+          <v-btn fab text small color="grey darken-2" @click="next">
+            <v-icon small> mdi-chevron-right </v-icon>
+          </v-btn>
+          <v-toolbar-title v-if="$refs.calendar">
+            {{ $refs.calendar.title }}
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-menu bottom right>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
+                <span>{{ typeToLabel[type] }} </span>
+                <v-icon right> mdi-menu-down </v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item @click="type = 'day'">
+                <v-list-item-title>Day</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="type = 'week'">
+                <v-list-item-title>Week</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="type = 'month'">
+                <v-list-item-title>Month</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="type = '4day'">
+                <v-list-item-title>4 days</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-toolbar>
+      </v-sheet>
+      <v-sheet height="600">
+        <v-calendar
+          ref="calendar"
+          v-model="focus"
+          color="primary"
+          :events="events"
+          :event-color="getStatusColor"
+          :type="type"
+          first-interval="6"
+          interval-height="72"
+          @click:event="showEvent"
+          @click:more="viewDay"
+          @click:date="viewDay"
+          @change="updateRange"
+        >
+          <template v-slot:event="{ event }">
+            <div :class="event.state">
+              <div class="pa-3">
+                <div style="float: left">
+                  <div class="mr-4" style="float: left">
+                    <p class="event-header-time">
+                      {{ event.time }}
+                    </p>
+                    <p class="event-header-name" style="font-weight: bold">
+                      {{ event.name }}
+                    </p>
+                  </div>
+                </div>
+                <div style="float: right">
+                  <v-btn
+                    :color="getDarkStatusColor(event)"
+                    class="event-header-btn"
+                    text
+                    to="/StartService"
+                    @click.native.stop
+                  >
+                    Begin Inventory<v-icon class="pl-5">mdi-arrow-right</v-icon>
+                  </v-btn>
+                </div>
+              </div>
+
+              <div v-if="event.duration >= 3" class="maxDiv">
+                <div
+                  style="font-size: 16px; white-space: normal"
+                  class="maxDiv"
+                >
+                  <v-list :color="getStatusColor(event)" class="maxDiv pa-0">
+                    <v-divider
+                      :color="getDarkStatusColor(event)"
+                      class="mt-10"
+                    ></v-divider>
+
+                    <v-row class="maxDiv ma-0 pl-5 pt-1">
+                      <v-col sm="4" class="maxDiv pa-0 ma-0">
+                        <v-row class="mt-0 mb-0">
+                          <v-col sm="1" class="pa-1">
+                            <v-icon medium :color="getDarkStatusColor(event)"
+                              >mdi-file-outline</v-icon
+                            >
+                          </v-col>
+                          <v-col sm="11" class="pa-1">
+                            <b>Order No.:</b>
+                            {{ event.orderNumber }}
+                          </v-col>
+                        </v-row>
+                        <v-row class="mt-0 mb-0">
+                          <v-col sm="1" class="pa-1">
+                            <v-icon medium :color="getDarkStatusColor(event)">
+                              mdi-account</v-icon
+                            >
+                          </v-col>
+                          <v-col sm="11" class="pa-1">
+                            {{ event.customerName }}
+                          </v-col>
+                        </v-row>
+                        <v-row class="mt-0 mb-0">
+                          <v-col sm="1" class="pa-1">
+                            <v-icon medium :color="getDarkStatusColor(event)">
+                              mdi-phone</v-icon
+                            >
+                          </v-col>
+                          <v-col sm="11" class="pa-1">
+                            {{ event.phoneNumber }}
+                          </v-col>
+                        </v-row>
+                      </v-col>
+                      <v-col sm="4" class="maxDiv pa-0 ma-0">
+                        <v-row class="mt-0 mb-1">
+                          <v-col sm="1" class="pa-1">
+                            <v-icon medium :color="getDarkStatusColor(event)"
+                              >mdi-email</v-icon
+                            >
+                          </v-col>
+                          <v-col sm="11" class="pa-1">
+                            <a :href="`mailto:${event.emailId}`">
+                              {{ event.emailId }}
+                            </a>
+                          </v-col>
+                        </v-row>
+                        <v-row class="mt-0 mb-1">
+                          <v-col sm="1" class="pa-1">
+                            <v-icon medium :color="getDarkStatusColor(event)">
+                              mdi-map-marker</v-icon
+                            >
+                          </v-col>
+                          <v-col sm="11" class="pa-1">
+                            {{ event.address }}
+                          </v-col>
+                        </v-row>
+                      </v-col>
+                      <v-col sm="4" class="maxDiv pa-0 ma-0">
+                        <v-row class="mt-0 mb-1">
+                          <v-col sm="6" class="pa-1">
+                            <b>Average No. Boxes :</b>
+                          </v-col>
+                          <v-col sm="6" class="pa-1">
+                            {{ event.averageNumberofBox }}
+                          </v-col>
+                        </v-row>
+                        <v-row class="mt-0 mb-1">
+                          <v-col sm="6" class="pa-1">
+                            <b>Average No. of Pallets :</b>
+                          </v-col>
+                          <v-col sm="6" class="pa-1">
+                            {{ event.averageNumberofPallets }}
+                          </v-col>
                         </v-row>
 
-                          
+                        <v-row class="mt-0 mb-1">
+                          <v-col sm="6" class="pa-1">
+                            <b>Average No. of Controls :</b>
+                          </v-col>
+                          <v-col sm="6" class="pa-1">
+                            {{ event.averageNumberofControls }}
+                          </v-col>
+                        </v-row>
+                        <v-row class="mt-0 mb-1">
+                          <v-col sm="6" class="pa-1">
+                            <b>Average Time Spent :</b>
+                          </v-col>
+                          <v-col sm="6" class="pa-1">
+                            <b></b>{{ event.averageTimeSpent }}
+                          </v-col>
+                        </v-row>
+                      </v-col>
+                    </v-row>
+                  </v-list>
+                </div>
+              </div>
+            </div>
+          </template>
+        </v-calendar>
 
-                    </template>
+        <v-menu
+          v-model="selectedOpen"
+          :close-on-content-click="false"
+          :activator="selectedElement"
+          offset-x
+          max-width="800"
+          min-width="800"
+        >
+          <v-card :color="getStatusColor(selectedEvent)">
+            <v-list class="pa-0" :color="getStatusColor(selectedEvent)">
+              <v-list-item>
+                <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+              </v-list-item>
+            </v-list>
 
-                </v-calendar>
-                <v-menu v-model="selectedOpen"
-                        :close-on-content-click="false"
-                        :activator="selectedElement"
-                        offset-x>
-                    <v-card color="grey lighten-4"
-                            min-width="350px"
-                            flat>
-                        <v-toolbar :color="selectedEvent.color"
-                                   dark>
-                           
-                            <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-                            <v-spacer></v-spacer>                           
-                        </v-toolbar>
-                        <v-card-text>
-                            <span v-html="selectedEvent.details"></span>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-btn text
-                                   color="secondary"
-                                   @click="selectedOpen = false">
-                                Cancel
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-menu>
-            </v-sheet>
-        </v-col>
-    </v-row>
+            <v-divider :color="getDarkStatusColor(selectedEvent)"></v-divider>
+
+            <v-list>
+              <v-container class="pl-5 pr-5 pt-1 pb-1">
+                <v-row>
+                  <v-col sm="4">
+                    <v-row class="mt-0 mb-1">
+                      <v-col sm="1" class="pa-1">
+                        <v-icon small :color="getDarkStatusColor(selectedEvent)"
+                          >mdi-file-outline</v-icon
+                        >
+                      </v-col>
+                      <v-col sm="11" class="pa-1">
+                        <b>Order No.:</b>
+                        {{ selectedEvent.orderNumber }}
+                      </v-col>
+                    </v-row>
+                    <v-row class="mt-0 mb-1">
+                      <v-col sm="1" class="pa-1">
+                        <v-icon
+                          small
+                          :color="getDarkStatusColor(selectedEvent)"
+                        >
+                          mdi-account</v-icon
+                        >
+                      </v-col>
+                      <v-col sm="11" class="pa-1">
+                        {{ selectedEvent.customerName }}
+                      </v-col>
+                    </v-row>
+                    <v-row class="mt-0 mb-1">
+                      <v-col sm="1" class="pa-1">
+                        <v-icon
+                          small
+                          :color="getDarkStatusColor(selectedEvent)"
+                        >
+                          mdi-phone</v-icon
+                        >
+                      </v-col>
+                      <v-col sm="11" class="pa-1">
+                        {{ selectedEvent.phoneNumber }}
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                  <v-col sm="4">
+                    <v-row class="mt-0 mb-1">
+                      <v-col sm="1" class="pa-1">
+                        <v-icon small :color="getDarkStatusColor(selectedEvent)"
+                          >mdi-email</v-icon
+                        >
+                      </v-col>
+                      <v-col sm="11" class="pa-1">
+                        <a :href="`mailto:${selectedEvent.emailId}`">
+                          {{ selectedEvent.emailId }}
+                        </a>
+                      </v-col>
+                    </v-row>
+                    <v-row class="mt-0 mb-1">
+                      <v-col sm="1" class="pa-1">
+                        <v-icon
+                          small
+                          :color="getDarkStatusColor(selectedEvent)"
+                        >
+                          mdi-map-marker</v-icon
+                        >
+                      </v-col>
+                      <v-col sm="11" class="pa-1">
+                        {{ selectedEvent.address }}
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                  <v-col sm="4">
+                    <v-row class="mt-0 mb-1">
+                      <v-col sm="9" class="pa-1">
+                        <b>Average No. Boxes :</b>
+                      </v-col>
+                      <v-col sm="3" class="pa-1">
+                        {{ selectedEvent.averageNumberofBox }}
+                      </v-col>
+                    </v-row>
+                    <v-row class="mt-0 mb-1">
+                      <v-col sm="9" class="pa-1">
+                        <b>Average No. of Pallets :</b>
+                      </v-col>
+                      <v-col sm="3" class="pa-1">
+                        {{ selectedEvent.averageNumberofPallets }}
+                      </v-col>
+                    </v-row>
+
+                    <v-row class="mt-0 mb-1">
+                      <v-col sm="9" class="pa-1">
+                        <b>Average No. of Controls :</b>
+                      </v-col>
+                      <v-col sm="3" class="pa-1">
+                        {{ selectedEvent.averageNumberofControls }}
+                      </v-col>
+                    </v-row>
+                    <v-row class="mt-0 mb-1">
+                      <v-col sm="9" class="pa-1">
+                        <b>Average Time Spent :</b>
+                      </v-col>
+                      <v-col sm="3" class="pa-1">
+                        <b></b>{{ selectedEvent.averageTimeSpent }}
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-list>
+
+            <v-divider :color="getDarkStatusColor(selectedEvent)"></v-divider>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                text
+                color="secondary"
+                @click="selectedOpen = false"
+                height="25"
+              >
+                Cancel
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-menu>
+      </v-sheet>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
-    export default {
-        name:"calender",
-        data: () => ({
-            focus: '',
-            type: 'month',
-            typeToLabel: {
-                month: 'Month',
-                week: 'Week',
-                day: 'Day',
-                '4day': '4 Days',
-            },
-            selectedEvent: {},
-            selectedElement: null,
-            selectedOpen: false,
-            events:
-                [
-                    {
-                        time:"10:00 - 11:30",
-                        name: 'Pharmacy B | SUNS008',
-                        start: '2021-05-13 10:00:00',
-                        end: '2021-05-13 11:30:00',
-                        color: 'cyan',
-                    },
-                    {
-                        name: 'test',
-                        start: '2021-05-14 07:00:00',
-                        end: '2021-05-14 07:25:00',
-                        color: 'green',
-                    },
-                    {
-                        name: 'test',
-                        start: '2021-05-16 08:00:00',
-                        end: '2021-05-16 08:15:00',
-                        color: 'red',
-                    },
-                ],
-            colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-            names: ['<h1>Meeting</h1>', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
-        }),
-        mounted() {
-            this.$refs.calendar.checkChange()
-        },
-        methods: {
-            viewDay({ date }) {
-                this.focus = date
-                this.type = 'day'
-            },
-            getEventColor(event) {
-                return event.color
-            },
-            setToday() {
-                this.focus = ''
-            },
-            prev() {
-                this.$refs.calendar.prev()
-            },
-            next() {
-                this.$refs.calendar.next()
-            },
-            showEvent({ nativeEvent, event }) {
-                const open = () => {
-                    this.selectedEvent = event
-                    this.selectedElement = nativeEvent.target
-                    requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
-                }
+export default {
+  name: "calender",
+  data: () => ({
+    focus: "",
+    type: "day",
+    typeToLabel: {
+      month: "Month",
+      week: "Week",
+      day: "Day",
+      "4day": "4 Days",
+    },
+    selectedEvent: {},
+    selectedElement: null,
+    selectedOpen: false,
+    events: [
+      {
+        state: "complete",
+        time: "09:00 - 12:00",
+        name: "Pharmacy B | SUNS008",
+        start: "2021-05-28 9:00:00",
+        end: "2021-05-28 12:00:00",
+        color: "yellow",
+        duration: "3",
+        orderNumber: "t6UJ9A005GXH",
+        customerName: "Chris Test",
+        phoneNumber: "1234567890",
+        emailId: "chris@test.com",
+        address: "Xyz test test",
+        averageNumberofBox: "6",
+        averageNumberofPallets: "4",
+        averageNumberofControls: "12",
+        averageTimeSpent: "3 hours",
+      },
+      {
+        state: "cancelled",
+        time: "07:00 - 09:00",
+        name: "Pharmacy C | Encompass",
+        start: "2021-05-28 07:00:00",
+        end: "2021-05-28 09:00:00",
+        color: "red",
+        duration: "2",
+        orderNumber: "333",
+        customerName: "Encompass Test",
+        phoneNumber: "1234567890",
+        emailId: "chris@test.com",
+        address: "Xyz test test",
+        averageNumberofBox: "6",
+        averageNumberofPallets: "4",
+        averageNumberofControls: "12",
+        averageTimeSpent: "3 hours",
+      },
+      {
+        state: "confirmed",
+        time: "13:00 - 16:00",
+        name:
+          "Pharmacy C | Encompass Health Rehabilitation Hospital of Richmond",
+        start: "2021-05-28 13:00:00",
+        end: "2021-05-28 16:00:00",
+        color: "green",
+        duration: "3",
+        orderNumber: "t6UJ9A005GXH",
+        customerName: "Encompass Health Rehabilitation Hospital of Richmond",
+        phoneNumber: "1234567890",
+        emailId: "Chris@test.com",
+        address: "1465 East Parkdale Avenue, Manistee, Michigan(MI) 49660",
+        averageNumberofBox: "6",
+        averageNumberofPallets: "4",
+        averageNumberofControls: "12",
+        averageTimeSpent: "3 hours",
+      },
+      {
+        state: "unconfirmed",
+        time: "16:00 - 24:00",
+        name:
+          "Pharmacy C | Encompass Health Rehabilitation Hospital of Richmond",
+        start: "2021-05-28 16:00:00",
+        end: "2021-05-28 24:00:00",
+        color: "green",
+        duration: "8",
+        orderNumber: "t6UJ9A005GXH",
+        customerName: "Encompass Health Rehabilitation Hospital of Richmond",
+        phoneNumber: "1234567890",
+        emailId: "Chris@test.com",
+        address: "1465 East Parkdale Avenue, Manistee, Michigan(MI) 49660",
+        averageNumberofBox: "6",
+        averageNumberofPallets: "4",
+        averageNumberofControls: "12",
+        averageTimeSpent: "3 hours",
+      },
+    ],
+    colors: [
+      "blue",
+      "indigo",
+      "deep-purple",
+      "cyan",
+      "green",
+      "orange",
+      "grey darken-1",
+    ],
+    names: [
+      "<h1>Meeting</h1>",
+      "Holiday",
+      "PTO",
+      "Travel",
+      "Event",
+      "Birthday",
+      "Conference",
+      "Party",
+    ],
+  }),
+  mounted() {
+    this.$refs.calendar.checkChange();
+  },
+  methods: {
+    viewDay({ date }) {
+      this.focus = date;
+      this.type = "day";
+    },
+    getStatusColor(event) {
+      if (event.state === "complete") {
+        return "#B5FFD9";
+      } else if (event.state === "cancelled") {
+        return "#F9CDD0";
+      } else if (event.state === "confirmed") {
+        return "#E8F4FE";
+      } else {
+        return "#EFF0F6";
+      }
+    },
 
-                if (this.selectedOpen) {
-                    this.selectedOpen = false
-                    requestAnimationFrame(() => requestAnimationFrame(() => open()))
-                } else {
-                    open()
-                }
+    getDarkStatusColor(event) {
+      if (event.state === "complete") {
+        return "#0DBA61";
+      } else if (event.state === "cancelled") {
+        return "#B30000";
+      } else if (event.state === "confirmed") {
+        return "#0063A7";
+      } else {
+        return "#76777A";
+      }
+    },
+    getCssClassFromStatus(event) {
+      var color = getDarkStatusColor(event);
+      return (
+        ".v-event-timed{border - radius: 8px;border - left: 8px solid " +
+        color +
+        "!important}"
+      );
+    },
+    setToday() {
+      this.focus = "";
+    },
+    prev() {
+      this.$refs.calendar.prev();
+    },
+    next() {
+      this.$refs.calendar.next();
+    },
+    showEvent({ nativeEvent, event }) {
+      const open = () => {
+        this.selectedEvent = event;
+        this.selectedElement = nativeEvent.target;
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => (this.selectedOpen = true))
+        );
+      };
 
-                nativeEvent.stopPropagation()
-            },
-            /*updateRange({ *//*start, end*//* }) {*/
-            updateRange() {
-                //const events = []
+      if (this.selectedOpen) {
+        this.selectedOpen = false;
+        requestAnimationFrame(() => requestAnimationFrame(() => open()));
+      } else {
+        open();
+      }
 
-                //const min = new Date(`${start.date}T00:00:00`)
-                //const max = new Date(`${end.date}T23:59:59`)
-                //const days = (max.getTime() - min.getTime()) / 86400000
-                //const eventCount = days;
-
-                //for (let i = 0; i < eventCount; i++) {
-                //    const allDay = this.rnd(0, 3) === 0
-                //    const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-                //const first = new Date("Thu May 13 2021 14:15:00 GMT+0530")
-                //    const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-                //const second = new Date("Thu May 13 2021 15:45:00 GMT+0530")
-
-                //    events.push({
-                //        name: this.names[this.rnd(0, this.names.length - 1)],
-                //        start: first,
-                //        end: second,
-                //        color: this.colors[this.rnd(0, this.colors.length - 1)],
-                //        timed: !allDay,
-                //    })
-                //}
-                //const allDay = false;
-                //const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-              //  const first = first
-                //const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-               // const second = second
-
-                //events.push({
-                //    name: this.names[0],
-                //    start: first,
-                //    end: second,
-                //    color: this.colors[0],
-                //    timed: !allDay,
-                //})
-
-                //this.events = events
-            },
-            rnd(a, b) {
-                return Math.floor((b - a + 1) * Math.random()) + a
-            },
-        },
-    }
+      nativeEvent.stopPropagation();
+    },
+    rnd(a, b) {
+      return Math.floor((b - a + 1) * Math.random()) + a;
+    },
+  },
+};
 </script>
 
-<!--<template>
-    <v-container>
-        <v-row class="text-center">
-            <v-col col="12">
-                <v-sheet height="500">
-                    <v-calendar :now="today" :value="today" color="primary">
-                        <template v-slot:day="{ present, past, date }">
-                            <v-row class="fill-height">
-                                <template v-if="past && tracked[date]">
-                                    <v-sheet v-for="(percent, i) in tracked[date]"
-                                             :key="i"
-                                             :title="category[i]"
-                                             :color="colors[i]"
-                                             :width="`${percent}%`"
-                                             height="100%"
-                                             tile></v-sheet>
-                                </template>
-                            </v-row>
-                        </template>
-                    </v-calendar>
-                </v-sheet>
-            </v-col>
-        </v-row>
-    </v-container>
-</template>
-<script>
-    export default {
-        name: "calender",
-        data: () => ({
-            today: "2020-01-10",
-            tracked: {
-                "2020-01-09": [23, 45, 10],
-                "2020-01-08": [10],
-                "2020-01-07": [0, 78, 5],
-                "2020-01-06": [0, 0, 50],
-                "2020-01-05": [0, 10, 23],
-                "2020-01-04": [2, 90],
-                "2020-01-03": [10, 32],
-                "2020-01-02": [80, 10, 10],
-                "2020-01-01": [20, 25, 10],
-            },
-            colors: ["red", "green", "blue"],
-            category: ["Development", "Meetings", "Slacking"],
-        }),
-    };
-</script>-->
+
