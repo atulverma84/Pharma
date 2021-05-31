@@ -1,87 +1,92 @@
 ﻿<template>
     <div>
-        <v-container outline>
-            <div>
-                <!-- Back Button -->
-                <v-btn fab icon large color="accent-bacg accent-2" top left @click="$router.go(-1)">
-                    <v-icon>mdi-arrow-left-bold-circle-outline</v-icon>
+        <!-- <v-container class="createSmall" outline> -->
+        <div class="left-right-space">
+            <!-- Back Button -->
+            <span>
+                <v-btn fab icon color="primary" top left @click="$router.go(-1)">
+                    <v-icon x-large>mdi-arrow-left-bold-circle-outline</v-icon>
                 </v-btn>{{ this.jobTitle }}
-                <!-- End of Back Button -->
-                <br>
+            </span>
+            <!-- End of Back Button -->
+            <v-spacer />
 
-                <v-card elevation="2">
+            <!-- <v-card> -->
 
-                    <!-- Tabs -->
-                    <v-tabs v-model="tab" grow light activeTab>
-                        <v-tab v-for="tab in tabs" :key="tab" @click="this.isActive = true"
-                            :class="{ tabSelected: tab == activeTab }">
-                            <span>
-                                <h4><v-icon fab>{{ tab.icon }}</v-icon> {{tab.name}}</h4>
-                            </span>
-                        </v-tab>
-                    </v-tabs>
-                    
-                    <v-tabs-items v-model="tab">
-                        <!-- Start Service Tab -->
-                        <v-tab-item>
+            <!-- Tabs -->
+            <v-tabs v-model="tab" max-height="10px" grow light icons-and-text>
+                <v-tab v-for="tab in tabs" :key="tab" :id="'tab'+tab.id" @click="toggleTabs(tab)">
+                    <span>
+                        <h4>
+                            <v-icon fab>{{ tab.icon }}</v-icon> {{tab.name}}
+                        </h4>
+                    </span>
+                </v-tab>
+            </v-tabs>
 
-                            <v-container class="detailsContainer">
-                                <v-row justify="space-around" no-gutters>
-                                    <v-col v-for="tile in tiles" :key="tile" md="4" no-gutters>
-                                        <div>
-                                            <v-row max-height="40px">
-                                                <v-col md="2">
-                                                    <v-avatar color="#B7DEFF">
-                                                        <v-icon color="rgba(0, 99, 167, 1)">{{ tile.icon }}</v-icon>
-                                                    </v-avatar>
-                                                </v-col>
-                                                <v-col>
-                                                    <p class="boldHeading">{{ tile.title }}</p>
-                                                    <p>{{ tile.value }}</p>
-                                                </v-col>
-                                            </v-row>
-                                        </div>
-                                    </v-col>
-                                </v-row>
-                            </v-container>
+            <br>
 
-                            <!-- Sub-caption -->
-                            <div id="subCaption">
-                                <h5>{{ this.subCaption }}</h5><br />
-                            </div><br />
-                            <!-- End of Sub-caption -->
+            <v-tabs-items v-model="tab" class="grey lighten-5 mb-6">
+                <!-- Start Service Tab -->
+                <v-tab-item>
 
-                            <!-- Start Service Button -->
-                            <div id="divStartService">
-                                <v-btn medium color="primary" dark @click="startService">
-                                    Start Service
-                                </v-btn>
-                            </div>
-                            <!-- End of Start Service Button -->
+                    <v-container class="detailsContainer">
+                        <v-row justify="space-between">
+                            <v-col v-for="tile in tiles" :key="tile" md="4">
+                                <div>
+                                    <v-row max-height="40px">
+                                        <v-col md="2">
+                                            <v-avatar color="#B7DEFF">
+                                                <v-icon color="rgba(0, 99, 167, 1)">
+                                                    {{ tile.icon }}</v-icon>
+                                            </v-avatar>
+                                        </v-col>
+                                        <v-col>
+                                            <p class="boldHeading">{{ tile.title }}</p>
+                                            <p>{{ tile.value }}</p>
+                                        </v-col>
+                                    </v-row>
+                                </div>
+                            </v-col>
+                        </v-row>
+                    </v-container>
 
-                            <br><br>
+                    <!-- Sub-caption -->
+                    <div id="subCaption">
+                        <h2>{{ this.subCaption }}</h2><br />
+                    </div><br />
+                    <!-- End of Sub-caption -->
 
-                        </v-tab-item>
-                        <!-- End of Start Service Tab -->
+                    <!-- Start Service Button -->
+                    <div id="divStartService">
+                        <v-btn id="btnStartSvc" x-large dark @click="startService">
+                            Start Service
+                        </v-btn>
+                    </div>
+                    <!-- End of Start Service Button -->
 
-                        <!-- Service Book Tab -->
-                        <v-tab-item>
-                            <v-card flat>
-                                <v-card-title class="headline">                                   
-                                </v-card-title>
-                                <v-card-text>
-                                    <service-book />
-                                </v-card-text>
-                            </v-card>
-                        </v-tab-item>
-                        <!-- End of Service Book Tab -->
+                    <br><br>
 
-                    </v-tabs-items>
+                </v-tab-item>
+                <!-- End of Start Service Tab -->
 
-                </v-card>
-            </div>
+                <!-- Service Book Tab -->
+                <v-tab-item>
+                    <v-card flat>
+                        <v-card-title class="headline">
+                        </v-card-title>
+                        <v-card-text>
+                            <service-book />
+                        </v-card-text>
+                    </v-card>
+                </v-tab-item>
+                <!-- End of Service Book Tab -->
+
+            </v-tabs-items>
             <!-- End of Tabs -->
-        </v-container>
+            <!-- </v-card> -->
+        </div>
+        <!-- </v-container> -->
 
     </div>
 </template>
@@ -97,17 +102,18 @@
         data() {
             return {
                 tab: null,
-                isActive: false,
-                activeTab: 0,
+                activeTab: 1,
                 tabs: [{
-                        id: 0,
+                        id: 1,
                         name: 'Service Information',
-                        icon: 'mdi-checkbox-marked-circle'
+                        icon: 'mdi-checkbox-marked-circle',
+                        isActive: true
                     },
                     {
-                        id: 1,
+                        id: 2,
                         name: 'Service Book',
-                        icon: 'mdi-book-open-variant'
+                        icon: 'mdi-book-open-variant',
+                        isActive: false
                     }
                 ],
                 jobTitle: 'Hospital A | Pharmacy 1',
@@ -152,7 +158,7 @@
             }
         },
         mounted() {
-            this.activeTab = 0
+            this.activeTab = 1
         },
         methods: {
             backToCalender() {
@@ -160,9 +166,10 @@
             },
             startService() {
                 console.log('Start Service clicked!')
+                alert('Service Started!')
             },
-            tabSelected() {
-                this.isActive = true
+            toggleTabs(tab) {
+                console.log('Selected Tab:' + tab.name)
             }
         },
     }
@@ -203,6 +210,20 @@
         align-items: center;
         letter-spacing: 0.5px;
         color: #111111;
+    }
+
+    #btnStartSvc {
+        background-color: rgba(0, 99, 167, 1);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 12px 42px;
+        position: static;
+        width: 300px;
+        height: 53px;
+        left: calc(50% - 300px/2);
+        top: calc(50% - 53px/2);
     }
 
     .btnReturn {
@@ -272,12 +293,22 @@
         color: #111111;
     }
 
-    .tabSelected, .v-tab--active {
+    .v-tab.v-tab--active {
         background-color: rgba(0, 99, 167, 1);
         color: white;
     }
 
+    .v-tab {
+        background-color: rgba(239, 240, 246, 1);
+        color: #76777A;
+    }
+
     .v-tab--active h4 {
         color: white;
+    }
+
+    .left-right-space {
+        margin-left: 5%;
+        margin-right: 5%;
     }
 </style>
