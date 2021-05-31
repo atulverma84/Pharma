@@ -4,93 +4,46 @@
     <div id="editInfo">
       <!-- Edit Information Button and Dialog -->
       <v-row row-height="50" justify="end">
-        <v-spacer />
-        <v-spacer />
-        <v-spacer />
-        <v-spacer />
-        <v-spacer />
-        <v-spacer />
-        <v-spacer />
-        <v-spacer />
-
-        <v-col>
-          <v-dialog v-model="dialog" max-width="600px">
-            <template v-slot:activator="{ on, attrs }">
-              <div id="editButton">
-                <span class="d-flex justify-end mb-6">
-                  <v-btn color="primary" dark v-bind="attrs" v-on="on" icon>
-                    <v-icon left fab>
-                      mdi-square-edit-outline
-                    </v-icon>
-                    Edit Information
-                  </v-btn>
-                </span>
-              </div>
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="headline">Pre-Service</span>
-              </v-card-title>
-              <v-card-text>
-                <v-container fluid>
-                  <v-row>
-                    <v-col cols="4">
-                      <v-subheader>{{ preSvcQuestions[0].question }}</v-subheader>
-                    </v-col>
-                    <v-col cols="8">
-                      <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="--Select--"
-                        required></v-select>                      
-                    </v-col>
-                  </v-row>
-
-                  <v-row>
-                    <v-col cols="4">
-                      <v-subheader>{{ preSvcQuestions[1].question }}</v-subheader>
-                    </v-col>
-                    <v-col cols="8">
-                      <v-text-field label="Enter the instructions"></v-text-field>
-                    </v-col>
-                  </v-row>
-
-                  <v-row>
-                    <v-col cols="4">
-                      <v-subheader>{{ preSvcQuestions[2].question }}</v-subheader>
-                    </v-col>
-                    <v-col cols="8">
-                      <v-text-field label="Enter an address"></v-text-field>
-                    </v-col>
-                  </v-row>
-
-                </v-container>
-
-                <small>*indicates required field</small>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="dialog = false">
-                  Close
-                </v-btn>
-                <v-btn color="blue darken-1" text @click="dialog = false">
-                  Save
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+        <v-col md="1" class="text-right">
+          <div id="editButton">
+            <span class="d-flex justify-end mb-4">
+              <v-btn color="primary" dark @click="EditInfo" icon>
+                <v-icon left fab>
+                  mdi-square-edit-outline
+                </v-icon>
+                Edit Information
+              </v-btn>
+            </span>
+          </div>
         </v-col>
       </v-row>
       <!-- End of Edit Information Button and Dialog -->
 
       <!-- Pre-Service Questions and Answers -->
-      <v-row v-for="item in preSvcQuestions" :key="item">
+      <v-row v-for="(item,i) in preSvcQuestions" :key="i" :id="'answerRow'+item.number">
         <v-col md="6">
           <h4>{{ item.number }}. {{ item.question }}</h4>
         </v-col>
 
         <v-col md="6">
-          <p>{{ item.answer }}</p>
+          <p v-show="!isEditing">{{ item.answer }}</p>
+          <v-text-field v-model="item.answer" v-show="isEditing" clearable outlined color="primary" required>{{ item.answer }}</v-text-field>
         </v-col>
       </v-row>
       <!-- End of Pre-Service Questions and Answers -->
+
+      <!-- Buttons -->
+      <v-row>
+        <v-col class="text-right" v-show="isEditing">
+          <v-btn id="btnCancel" class="mx-2" @click="Cancel" outlined color="primary">
+            Cancel
+          </v-btn>
+          <v-btn id="btnSave" class="mx-2" @click="SaveChanges" color="primary">
+            Save Changes
+          </v-btn>
+        </v-col>
+      </v-row>
+      <!-- End of Buttons -->
     </div>
 
   </v-container>
@@ -102,6 +55,7 @@
     data() {
       return {
         dialog: false,
+        isEditing: false,
         preSvcQuestions: [{
             number: 1,
             question: 'Credentials needed to gain access?',
@@ -123,6 +77,21 @@
           'Failed',
           'Not Required'
         ]
+      }
+    },
+    methods: {
+      EditInfo() {
+        this.isEditing = true
+        console.log("Edit Button clicked.")
+      },
+      Cancel() {
+        this.isEditing = false
+      },
+      SaveChanges() {
+        //For closing the edit mode - Temporarily
+        //Needs logic to save the new data
+        this.isEditing = false
+        console.log('Changes saved!')
       }
     }
   }

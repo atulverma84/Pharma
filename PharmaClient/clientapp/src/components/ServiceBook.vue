@@ -15,7 +15,7 @@
             </v-avatar>
           </v-col>
           <v-col md="2">
-            <p class="boldHeading">{{ this.numberOfBoxes }}</p>
+            <h4>{{ this.numberOfBoxes }}</h4>
             <p>Average No. of Boxes</p>
           </v-col>
           <!-- End of Stats #1 - Average number of boxes -->
@@ -27,7 +27,7 @@
             </v-avatar>
           </v-col>
           <v-col md="2">
-            <p class="boldHeading">{{ this.avgNumOfPallets }}</p>
+            <h4>{{ this.avgNumOfPallets }}</h4>
             <p>Average No. of Pallets</p>
           </v-col>
           <!-- End of Stats #2 - Average number of pallets -->
@@ -39,7 +39,7 @@
             </v-avatar>
           </v-col>
           <v-col md="2">
-            <p class="boldHeading">{{ this.avgNumOfControls }}</p>
+            <h4>{{ this.avgNumOfControls }}</h4>
             <p>Average No. of Controls</p>
           </v-col>
           <!-- End of Stats #3 - Average number of controls -->
@@ -51,7 +51,7 @@
             </v-avatar>
           </v-col>
           <v-col md="2">
-            <p class="boldHeading">{{ this.avgTimeSpent }}</p>
+            <h4>{{ this.avgTimeSpent }}</h4>
             <p>Average Time Spent</p>
           </v-col>
           <!-- End of Stats #4 - Average time spent -->
@@ -139,20 +139,6 @@
 
         <v-expansion-panel>
           <v-expansion-panel-header>
-            <h5>Misc</h5>
-            <template v-slot:actions>
-              <v-icon color="rgba(0, 99, 167, 1)">
-                mdi-plus
-              </v-icon>
-            </template>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <Misc />
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-
-        <v-expansion-panel>
-          <v-expansion-panel-header>
             <h5>Comments</h5>
             <template v-slot:actions>
               <v-icon color="rgba(0, 99, 167, 1)">
@@ -177,7 +163,6 @@
   import PreService from './ServiceBookPanels/PreService.vue'
   import Service from './ServiceBookPanels/Service.vue'
   import PostService from './ServiceBookPanels/PostService.vue'
-  import Misc from './ServiceBookPanels/Misc.vue'
   import Comments from './ServiceBookPanels/Comments.vue'
 
   export default {
@@ -188,7 +173,6 @@
       PreService,
       Service,
       PostService,
-      Misc,
       Comments
     },
     data() {
