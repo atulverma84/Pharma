@@ -26,7 +26,7 @@
         </v-col>
       </v-row>
 
-      TODO Add the logic for multiple comments (add and delete functionality)
+      <!-- TODO Add the logic for multiple comments (add and delete functionality) -->
       <!-- <v-row v-for="(textField, i) in additionalComments" :key="i">
         <v-col md="2">          
           <p v-show="!this.isEditing">{{ textField.date }} -</p>
