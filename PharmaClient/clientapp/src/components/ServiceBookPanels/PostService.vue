@@ -1,5 +1,5 @@
 <template>
-  <v-container id="postSvc" class="grey lighten-5 mb-6" fluid>
+  <div id="svcBookPostSvc" class="mb-6" fluid>
 
     <div id="editInfo">
       <!-- Edit Information Button -->
@@ -46,7 +46,7 @@
       <!-- End of Buttons -->
     </div>
 
-  </v-container>
+  </div>
 </template>
 
 <script>
