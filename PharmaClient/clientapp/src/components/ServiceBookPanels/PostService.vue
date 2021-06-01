@@ -2,7 +2,7 @@
   <v-container id="postSvc" class="grey lighten-5 mb-6" fluid>
 
     <div id="editInfo">
-      <!-- Edit Information Button and Dialog -->
+      <!-- Edit Information Button -->
       <v-row row-height="50" justify="end">
         <v-col md="1" class="text-right">
           <div id="editButton">
@@ -17,7 +17,7 @@
           </div>
         </v-col>
       </v-row>
-      <!-- End of Edit Information Button and Dialog -->
+      <!-- End of Edit Information Button -->
 
       <!-- Service Questions and Answers -->
       <v-row v-for="(item,i) in postSvcQuestions" :key="i" :id="'answerRow'+item.number">

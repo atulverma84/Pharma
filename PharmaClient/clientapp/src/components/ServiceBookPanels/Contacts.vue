@@ -2,83 +2,23 @@
     <v-container id="svcBook" class="grey lighten-5 mb-6" fluid>
 
         <div id="editInfo">
-            <!-- Edit Information Button and Dialog -->
+            <!-- Edit Information Button -->
             <v-row row-height="50" justify="end">
-                <v-spacer /><v-spacer /><v-spacer /><v-spacer /><v-spacer /><v-spacer /><v-spacer />
-
-                <v-col>
-                    <v-dialog v-model="dialog" persistent max-width="600px">
-                        <template v-slot:activator="{ on, attrs }">
-                            <div id="editButton">
-                                <span class="d-flex justify-end mb-6">
-                                    <v-btn color="primary" dark v-bind="attrs" v-on="on" icon>
-                                        <v-icon left fab>
-                                            mdi-square-edit-outline
-                                        </v-icon>
-                                        Edit Information
-                                    </v-btn>
-                                </span>
-                            </div>
-                        </template>
-                        <v-card>
-                            <v-card-title>
-                                <span class="headline">Contacts</span>
-                            </v-card-title>
-                            <v-card-text>
-                                <v-container>
-                                    <v-row>
-                                        <p>Scheduling Contact:</p>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field label="First name*" required></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field label="Last name*" hint="example of persistent helper text"
-                                                persistent-hint required></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12">
-                                            <v-text-field label="Phone*" required></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12">
-                                            <v-text-field label="Email*" required></v-text-field>
-                                        </v-col>
-                                    </v-row>
-                                    <v-spacer></v-spacer>
-
-                                    <v-row>
-                                        <h5>Service Contacts:</h5>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field label="First name*" required></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-text-field label="Last name*" hint="example of persistent helper text"
-                                                persistent-hint required></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12">
-                                            <v-text-field label="Phone*" required></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12">
-                                            <v-text-field label="Email*" required></v-text-field>
-                                        </v-col>
-                                    </v-row>
-                                </v-container>
-                                <small>*indicates required field</small>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="blue darken-1" text @click="dialog = false">
-                                    Close
-                                </v-btn>
-                                <v-btn color="blue darken-1" text @click="dialog = false">
-                                    Save
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
+                <v-col md="1" class="text-right">
+                    <div id="editButton">
+                        <span class="d-flex justify-end mb-4">
+                            <v-btn color="primary" dark @click="EditInfo" icon>
+                                <v-icon left fab>
+                                    mdi-square-edit-outline
+                                </v-icon>
+                                Edit Information
+                            </v-btn>
+                        </span>
+                    </div>
                 </v-col>
             </v-row>
-            <!-- End of Edit Information Button and Dialog -->
-            
-            
+            <!-- End of Edit Information Button -->
+
             <v-row>
                 <!-- Scheduled Contact Info -->
                 <div id="schContactInfo">
@@ -95,7 +35,9 @@
                         </v-col>
                         <v-col md="2">
                             <h5>Name:</h5>
-                            <p>{{ this.schContactName }}</p>
+                            <p v-show="!isEditing">{{ this.schContactName }}</p>
+                            <v-text-field v-model="this.schContactName" v-show="isEditing" clearable outlined
+                                color="primary" required>{{ this.schContactName }}</v-text-field>
                         </v-col>
 
                         <v-col md="1" class="text-right">
@@ -103,7 +45,9 @@
                         </v-col>
                         <v-col md="2">
                             <h5>Phone Number:</h5>
-                            <p>{{ this.schContactPhone }}</p>
+                            <p v-show="!isEditing">{{ this.schContactPhone }}</p>
+                            <v-text-field v-model="this.schContactPhone" v-show="isEditing" clearable outlined
+                                color="primary" required>{{ this.schContactPhone }}</v-text-field>
                         </v-col>
 
                         <v-col md="1" class="text-right">
@@ -111,7 +55,9 @@
                         </v-col>
                         <v-col md="2">
                             <h5>Email:</h5>
-                            <p>{{ this.schContactEmail }}</p>
+                            <p  v-show="!isEditing">{{ this.schContactEmail }}</p>
+                            <v-text-field v-model="this.schContactEmail" v-show="isEditing" clearable outlined
+                                color="primary" required>{{ this.schContactEmail }}</v-text-field>
                         </v-col>
 
                     </v-row>
@@ -126,13 +72,15 @@
                         </v-col>
                     </v-row>
 
-                    <v-row v-for="svcContact in serviceContacts" :key="svcContact">
+                    <v-row v-for="svcContact in serviceContacts" :key="svcContact" :id="'svcContact'+svcContact.index">
                         <v-col md="1" class="text-right">
                             <v-icon color="rgba(0, 99, 167, 1)" fab>mdi-account</v-icon>
                         </v-col>
                         <v-col md="2">
                             <h5>Name:</h5>
-                            <p>{{ svcContact.name }}</p>
+                            <p  v-show="!isEditing">{{ svcContact.name }}</p>
+                            <v-text-field v-model="svcContact.name" v-show="isEditing" clearable outlined
+                                color="primary" required>{{ svcContact.name }}</v-text-field>
                         </v-col>
 
                         <v-col md="1" class="text-right">
@@ -140,7 +88,9 @@
                         </v-col>
                         <v-col md="2">
                             <h5>Phone Number:</h5>
-                            <p>{{ svcContact.phone }}</p>
+                            <p  v-show="!isEditing">{{ svcContact.phone }}</p>
+                            <v-text-field v-model="svcContact.phone" v-show="isEditing" clearable outlined
+                                color="primary" required>{{ svcContact.phone }}</v-text-field>
                         </v-col>
 
                         <v-col md="1" class="text-right">
@@ -148,12 +98,27 @@
                         </v-col>
                         <v-col md="2">
                             <h5>Email:</h5>
-                            <p>{{ svcContact.email }}</p>
+                            <p  v-show="!isEditing">{{ svcContact.email }}</p>
+                            <v-text-field v-model="svcContact.email" v-show="isEditing" clearable outlined
+                                color="primary" required>{{ svcContact.email }}</v-text-field>
                         </v-col>
 
                     </v-row>
                 </div>
                 <!-- End of Service Contact Info -->
+
+                <!-- Buttons -->
+                <v-row>
+                    <v-col class="text-right" v-show="isEditing">
+                        <v-btn id="btnCancel" class="mx-2" @click="Cancel" outlined color="primary">
+                            Cancel
+                        </v-btn>
+                        <v-btn id="btnSave" class="mx-2" @click="SaveChanges" color="primary">
+                            Save Changes
+                        </v-btn>
+                    </v-col>
+                </v-row>
+                <!-- End of Buttons -->
             </v-row>
         </div>
 
@@ -165,23 +130,38 @@
         name: 'Contacts',
         data() {
             return {
-                dialog: false,
+                isEditing: false,
                 schContactName: 'Chris Barnes',
                 schContactPhone: '(773) 826-0000',
                 schContactEmail: 'barnes.chris@hospitalabc.com',
                 serviceContacts: [{
-                        index: 0,
+                        index: 1,
                         name: 'Janet Robin',
                         phone: '(773) 826-0001',
                         email: 'janetrobin@mail.com'
                     },
                     {
-                        index: 1,
+                        index: 2,
                         name: 'Louie Grayson',
                         phone: '(773) 826-0002',
                         email: 'louiegrayson@mail.com'
                     }
                 ]
+            }
+        },
+        methods: {
+            EditInfo() {
+                this.isEditing = true
+                console.log("Edit Button clicked.")
+            },
+            Cancel() {
+                this.isEditing = false
+            },
+            SaveChanges() {
+                //For closing the edit mode - Temporarily
+                //Needs logic to save the new data
+                this.isEditing = false
+                console.log('Changes saved!')
             }
         }
     }

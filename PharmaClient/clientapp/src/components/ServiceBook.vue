@@ -10,8 +10,8 @@
         <!-- Stats #1 - Average number of boxes -->
         <v-row max-height="80px" justify="space-between">
           <v-col md="1" class="text-right">
-            <v-avatar color="#B7DEFF" size="60">
-              <v-icon color="rgba(0, 99, 167, 1)" size="40">mdi-package-variant-closed</v-icon>
+            <v-avatar color="#B7DEFF">
+              <v-icon color="rgba(0, 99, 167, 1)">mdi-package-variant-closed</v-icon>
             </v-avatar>
           </v-col>
           <v-col md="2">
@@ -22,8 +22,8 @@
 
           <!-- Stats #2 - Average number of pallets -->
           <v-col md="1" class="text-right">
-            <v-avatar color="#B7DEFF" size="60">
-              <v-icon color="rgba(0, 99, 167, 1)" size="40">mdi-package-variant</v-icon>
+            <v-avatar color="#B7DEFF">
+              <v-icon color="rgba(0, 99, 167, 1)">mdi-package-variant</v-icon>
             </v-avatar>
           </v-col>
           <v-col md="2">
@@ -34,8 +34,8 @@
 
           <!-- Stats #3 - Average number of controls -->
           <v-col md="1" class="text-right">
-            <v-avatar color="#B7DEFF" size="60">
-              <v-icon color="rgba(0, 99, 167, 1)" size="40">mdi-file</v-icon>
+            <v-avatar color="#B7DEFF">
+              <v-icon color="rgba(0, 99, 167, 1)">mdi-file</v-icon>
             </v-avatar>
           </v-col>
           <v-col md="2">
@@ -46,8 +46,8 @@
 
           <!-- Stats #4 - Average time spent -->
           <v-col md="1" class="text-right">
-            <v-avatar color="#B7DEFF" size="60">
-              <v-icon color="rgba(0, 99, 167, 1)" size="40">mdi-clock</v-icon>
+            <v-avatar color="#B7DEFF">
+              <v-icon color="rgba(0, 99, 167, 1)">mdi-clock</v-icon>
             </v-avatar>
           </v-col>
           <v-col md="2">

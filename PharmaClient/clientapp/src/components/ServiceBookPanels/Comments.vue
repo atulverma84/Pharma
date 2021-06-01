@@ -23,18 +23,30 @@
       <v-row>
         <v-col md="6">
           <h4>Additional Comments</h4>
-        </v-col>        
+        </v-col>
       </v-row>
 
-      <v-row :id="addtnlComments">
-        <v-col md="2">
-          <p>05/17/2021</p>
+      <!-- TODO Add the logic for multiple comments (add and delete functionality) -->
+      <!-- <v-row v-for="(textField, i) in additionalComments" :key="i">
+        <v-col md="2">          
+          <p v-show="!this.isEditing">{{ textField.date }} -</p>
         </v-col>
-        <v-vol md="10">
-          <h5 v-show="!this.isEditing">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Facere, adipisci.</h5>
-          <v-text-field :id="addtnlComment1" v-show="this.isEditing" clearable outlined
-            color="primary" required></v-text-field>
-        </v-vol>
+        <v-col md="10">
+          <h5 v-show="!this.isEditing">{{ textField.comment }}</h5>
+          <v-text-field v-show="this.isEditing" v-model="textField.comment" clearable outlined color="primary" required>
+          </v-text-field>
+        </v-col>
+      </v-row> -->
+
+      <v-row>
+        <v-col md="2" class="text-right">          
+          <p>{{ this.additionalComments[0].date }} -</p>
+        </v-col>
+        <v-col md="10">
+          <h5 v-show="!this.isEditing">{{ this.additionalComments[0].comment }}</h5>
+          <v-text-field v-show="this.isEditing" v-model="this.additionalComments[0].comment" clearable outlined color="primary" required>
+          </v-text-field>
+        </v-col>
       </v-row>
       <!-- End of Comments Section -->
 
@@ -62,13 +74,17 @@
       return {
         dialog: false,
         isEditing: false,
-        additionalComments: []
+        additionalComments: [
+          { 
+            date: '05/17/2021',
+            comment: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Facere, adipisci.'            
+          }
+        ]
       }
     },
     methods: {
       EditInfo() {
         this.isEditing = true
-        console.log("Edit Button clicked.")
       },
       Cancel() {
         this.isEditing = false
@@ -78,7 +94,16 @@
         //Needs logic to save the new data
         this.isEditing = false
         console.log('Changes saved!')
-      }
+      },
+      add () {
+        this.additionalComments.push({ 
+          date: "05/31/2021", 
+          comment: "Test Comment",
+        })
+     },    
+     remove (index) {
+         this.additionalComments.splice(index, 1)
+     }
     }
   }
 </script>
@@ -92,7 +117,7 @@
     line-height: 160%;
   }
 
-h5 {
+  h5 {
     font-family: Arial;
     font-style: normal;
     font-weight: bold;
