@@ -22,7 +22,7 @@ namespace PharmaCoreApi
     {
         public Startup(IConfiguration configuration)
         {
-           
+
             Configuration = configuration;
         }
 
@@ -55,20 +55,25 @@ namespace PharmaCoreApi
                     });
             });
 
-           // services.AddApplicationInsightsTelemetry(Configuration);
+            // services.AddApplicationInsightsTelemetry(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-          
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
+           // app.UseHttpsRedirection();
             app.ConfigureExceptionHandler(logger);
             app.UseRouting();
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllerRoute("default", "{controller}/{action}");
+            //});
             app.UseCors(builder =>
             {
                 builder.WithOrigins("http://localhost:8080");

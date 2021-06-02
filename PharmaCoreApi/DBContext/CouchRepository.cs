@@ -245,7 +245,7 @@ namespace PharmaCoreApi.Models
         public async Task<string> WriteTextAsync(string filePath, DrugDetails drugDetails)
         {
             bool isAddedOrAppended = false;
-            string text = drugDetails.DrugName + " " + drugDetails.DrugExpiredOn + Environment.NewLine;
+            string text = drugDetails.DrugName + " " + drugDetails.DrugExpiredOn  + drugDetails.LotNo + Environment.NewLine;
 
             string SAMPLE_KEY = "gCjK+DZ/GCYbKIGiAt1qCA==";
             string SAMPLE_IV = "47l5QsSe1POo31adQ/u7nQ==";

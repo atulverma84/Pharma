@@ -27,6 +27,9 @@ namespace PharmaCoreApi.Models
         public string DManName { get; set; }
         public string DFormCode { get; set; }
         public string DStrength { get; set; }
+        public string DProductName { get; set; }
+        public string DPackSize { get; set; }
 
+        
     }
 }

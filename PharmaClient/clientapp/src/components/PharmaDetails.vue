@@ -46,6 +46,16 @@
             Save
           </v-btn>
         </v-col>
+        <v-col>
+         <v-btn
+          color="indigo"
+          dark
+          v-bind="attrs"
+          v-on="on"
+        >
+          Menu as Popover
+        </v-btn>
+        </v-col>
       </v-row>
       <v-row>
         <v-col class="mb-5" cols="5">
@@ -206,7 +216,7 @@ export default {
       const headers = new Headers();
       headers.append("Authorization", "api_key");
       const request = new Request(
-        "https://localhost:5001/api/pharma/2a6355929ef209c6b542004c86006909",
+        "https://localhost:5001/api/pharma/085faef6a50996948d76e33a92000423",
         {
           method: "GET",
           headers,

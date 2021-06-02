@@ -11,5 +11,13 @@ namespace PharmaCoreApi.Models
 
         public DateTime DrugExpiredOn { get; set; }
 
+        public string QuantityNo { get; set; }
+
+        public string PartialNo { get; set; }
+        public string Expiration { get; set; }
+
+        public string LotNo { get; set; }
+
+
     }
 }

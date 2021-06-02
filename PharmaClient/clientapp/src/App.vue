@@ -55,9 +55,10 @@ export default {
                 { title: 'Calender', icon: 'mdi-view-dashboard', to: '/calender' },
                 { title: 'PharmaDetails', icon: 'mdi-image', to: '/pharmaDetails' },
                 { title: 'About', icon: 'mdi-help-box' },
+                { title: 'OnSiteApp', icon: 'mdi-view-dashboard', to: '/OnSiteApp' },
+                { title: 'OrderEntryList', icon: 'mdi-view-dashboard', to: '/OrderEntry'}
             ],
             right: null  
-        }),
-      
+        }), 
 };
 </script>
