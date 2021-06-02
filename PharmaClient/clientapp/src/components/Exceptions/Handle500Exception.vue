@@ -17,9 +17,6 @@
 </template>
 
 <style scoped>
-
-
-
 .face {
   width: 255px;
   height: 250px;
@@ -139,35 +136,35 @@ h1 {
   padding-top: 20px;
 }
 
-    .btn {
-        font-family: "Open Sans";
-        font-weight: 400;
-        background-color: rgb(25, 118, 210);
-        color: white;
-        width: 200px;
-        margin: 0 auto;
-        text-align: center;
-        font-size: 1.2em;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 6px;
-        padding: 5px;
-        transition: all 0.2s linear;
-    }
+.btn {
+  font-family: "Open Sans";
+  font-weight: 400;
+  background-color: rgb(25, 118, 210);
+  color: white;
+  width: 200px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 1.2em;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 6px;
+  padding: 5px;
+  transition: all 0.2s linear;
+}
 
-        .btn:hover {
-            background-color: rgba(94, 127, 220, 0.8);
-            transition: all 0.2s linear;
-        }
+.btn:hover {
+  background-color: rgba(94, 127, 220, 0.8);
+  transition: all 0.2s linear;
+}
 </style>
 
 <script>
 export default {
   name: "Handle500Exception",
-  methods:{
-   goToHome(){
-   this.$router.push('/'); 
-      }
-  }
+  methods: {
+    goToHome() {
+      this.$router.push("/");
+    },
+  },
 };
 </script>
