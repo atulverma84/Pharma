@@ -56,9 +56,9 @@ namespace PharmaCoreApi.Controllers
         }
 
 
-        [HttpGet()]
+        [HttpPost()]
         [Route("View")]
-        public async Task<IActionResult> PostFindViewDocument([FromBody] QueryView key)
+        public async Task<IActionResult> PostFindViewDocument(QueryView key)
         {
             _logger.LogInformation("Finding results in documents");
             var result = await _couchRepository.GetViewAsync(key);
@@ -105,5 +105,7 @@ namespace PharmaCoreApi.Controllers
             }
             return new NotFoundObjectResult("NotFound");
         }
+
+     
     }
 }
