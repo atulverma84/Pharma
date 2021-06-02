@@ -1,14 +1,21 @@
-<style>
+<style scoped>
 /* div .theme--light.v-calendar-events .v-event-timed {
         border-radius: 8px;
         border-left: 8px solid blue !important;
     }*/
+
 .v-date-picker-table__events > div {
   border-radius: 50%;
   display: inline-block;
   height: 8px;
   margin: 0 1px;
-  width: 6px !important;
+  width: 5px !important;
+}
+
+.paused {
+  border-left: 8px solid #fdb825 !important;
+  height: 100%;
+  width: 100%;
 }
 
 .complete {
@@ -85,6 +92,15 @@
   float: left;
 }
 
+.pausedDot {
+  height: 32px;
+  width: 32px;
+  background-color: #fdb825;
+  border-radius: 50%;
+  display: inline-block;
+  float: left;
+}
+
 .maxDiv {
   height: 100%;
   width: 100%;
@@ -113,6 +129,10 @@
 .unconfirmedBorderColor {
   border: 1px solid #76777a !important;
 }
+
+.pausedBorderColor {
+  border: 1px solid #fdb825 !important;
+}
 </style>
 
 <template>
@@ -120,20 +140,20 @@
     <v-col sm="9">
       <v-sheet height="64">
         <!--<v-toolbar flat>
-                            <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
-                                Today
-                            </v-btn>
-                            <v-btn fab text small color="grey darken-2" @click="prev">
-                                <v-icon small> mdi-chevron-left </v-icon>
-                            </v-btn>
-                            <v-btn fab text small color="grey darken-2" @click="next">
-                                <v-icon small> mdi-chevron-right </v-icon>
-                            </v-btn>
+                                    <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
+                                        Today
+                                    </v-btn>
+                                    <v-btn fab text small color="grey darken-2" @click="prev">
+                                        <v-icon small> mdi-chevron-left </v-icon>
+                                    </v-btn>
+                                    <v-btn fab text small color="grey darken-2" @click="next">
+                                        <v-icon small> mdi-chevron-right </v-icon>
+                                    </v-btn>
 
-                            <v-toolbar-title v-if="$refs.calendar">
-                                {{ $refs.calendar.title }}
-                            </v-toolbar-title>
-                        </v-toolbar>-->
+                                    <v-toolbar-title v-if="$refs.calendar">
+                                        {{ $refs.calendar.title }}
+                                    </v-toolbar-title>
+                                </v-toolbar>-->
         <h1 class="pt-2 pl-5">Hello Alex!</h1>
       </v-sheet>
       <v-sheet height="600">
@@ -169,8 +189,9 @@
                     to="/StartService"
                     @click.native.stop
                   >
-                    {{ getButtonText(event)
-                    }}<v-icon class="pl-1">mdi-arrow-right</v-icon>
+                    <v-icon class="pr-1">{{ getButtonIcon(event) }}</v-icon>
+                    {{ getButtonText(event) }}
+                    <v-icon class="pl-1">mdi-arrow-right</v-icon>
                   </v-btn>
                 </div>
               </div>
@@ -430,14 +451,20 @@
         </v-menu>
       </v-sheet>
     </v-col>
-    <v-col sm="3" style="background-color: #f7f9fe">
+    <v-col
+      sm="3"
+      style="background-color: #f7f9fe"
+      @mouseleave="isShowDescription = false"
+    >
       <v-row>
         <div class="mt-10 ml-3 calenderDiv">
           <div style="font-size: 20px; float: left" class="ml-6">
             <b>Your Work Calendar:</b>
           </div>
-          <div class="mt-1" v-on:click="isShowDescription = !isShowDescription">
-            <v-icon medium color="#1976d2">mdi-information</v-icon>
+          <div class="mt-1">
+            <v-icon medium color="#1976d2" @mouseover="isShowDescription = true"
+              >mdi-information</v-icon
+            >
           </div>
           <v-date-picker
             v-model="focus"
@@ -446,6 +473,7 @@
             height="200"
             no-title
             :events="functionEvents"
+            :allowed-dates="allowedDates"
           ></v-date-picker>
           <div v-if="isShowDescription">
             <v-list>
@@ -527,6 +555,15 @@
                   </div>
                 </v-col>
               </v-row>
+              <v-row class="mt-0">
+                <v-col sm="12" class="ml-4">
+                  <span class="pausedDot"></span>
+
+                  <div style="float: left" class="ml-2 pt-1">
+                    Pasued service
+                  </div>
+                </v-col>
+              </v-row>
             </v-list>
           </div>
         </div>
@@ -553,6 +590,7 @@ export default {
     selectedOpen: false,
     events: [
       {
+        id: 1,
         state: "complete",
         time: "09:00 - 12:00",
         name: "Pharmacy B | SUNS008",
@@ -572,6 +610,7 @@ export default {
       },
 
       {
+        id: 2,
         state: "cancelled",
         time: "07:00 - 09:00",
         name: "Pharmacy C | Encompass",
@@ -589,7 +628,28 @@ export default {
         averageNumberofControls: "12",
         averageTimeSpent: "3 hours",
       },
+
       {
+        id: 3,
+        state: "cancelled",
+        time: "07:00 - 09:00",
+        name: "Pharmacy C | Encompass",
+        start: "2021-05-30 07:00:00",
+        end: "2021-05-30 09:00:00",
+        color: "red",
+        duration: "2",
+        orderNumber: "333",
+        customerName: "Encompass Test",
+        phoneNumber: "1234567890",
+        emailId: "chris@test.com",
+        address: "Xyz test test",
+        averageNumberofBox: "6",
+        averageNumberofPallets: "4",
+        averageNumberofControls: "12",
+        averageTimeSpent: "3 hours",
+      },
+      {
+        id: 4,
         state: "confirmed",
         time: "13:00 - 16:00",
         name:
@@ -609,6 +669,7 @@ export default {
         averageTimeSpent: "3 hours",
       },
       {
+        id: 5,
         state: "complete",
         time: "09:00 - 12:00",
         name: "Pharmacy B | SUNS008",
@@ -627,11 +688,31 @@ export default {
         averageTimeSpent: "3 hours",
       },
       {
-        state: "unconfirmed",
-        time: "01:00 - 02:00",
+        id: 6,
+        state: "complete",
+        time: "09:00 - 12:00",
         name: "Pharmacy B | SUNS008",
-        start: "2021-05-31 01:00:00",
-        end: "2021-05-31 02:00:00",
+        start: "2021-05-30 9:00:00",
+        end: "2021-05-30 12:00:00",
+        color: "yellow",
+        duration: "3",
+        orderNumber: "t6UJ9A005GXH",
+        customerName: "Chris Test",
+        phoneNumber: "1234567890",
+        emailId: "chris@test.com",
+        address: "Xyz test test",
+        averageNumberofBox: "6",
+        averageNumberofPallets: "4",
+        averageNumberofControls: "12",
+        averageTimeSpent: "3 hours",
+      },
+      {
+        id: 7,
+        state: "unconfirmed",
+        time: "05:00 - 06:00",
+        name: "Pharmacy B | SUNS008",
+        start: "2021-05-31 05:00:00",
+        end: "2021-05-31 06:00:00",
         color: "yellow",
         duration: "1",
         orderNumber: "t6UJ9A005GXH",
@@ -645,6 +726,26 @@ export default {
         averageTimeSpent: "1 hours",
       },
       {
+        id: 8,
+        state: "unconfirmed",
+        time: "05:00 - 06:00",
+        name: "Pharmacy B | SUNS008",
+        start: "2021-05-30 05:00:00",
+        end: "2021-05-30 06:00:00",
+        color: "yellow",
+        duration: "1",
+        orderNumber: "t6UJ9A005GXH",
+        customerName: "Chris Test",
+        phoneNumber: "1234567890",
+        emailId: "chris@test.com",
+        address: "Xyz test test",
+        averageNumberofBox: "6",
+        averageNumberofPallets: "4",
+        averageNumberofControls: "12",
+        averageTimeSpent: "1 hours",
+      },
+      {
+        id: 9,
         state: "cancelled",
         time: "05:00 - 09:00",
         name: "Pharmacy C | Encompass",
@@ -663,12 +764,53 @@ export default {
         averageTimeSpent: "3 hours",
       },
       {
+        id: 10,
         state: "confirmed",
         time: "13:00 - 16:00",
         name:
           "Pharmacy C | Encompass Health Rehabilitation Hospital of Richmond",
         start: "2021-05-27 13:00:00",
         end: "2021-05-27 16:00:00",
+        color: "green",
+        duration: "3",
+        orderNumber: "t6UJ9A005GXH",
+        customerName: "Encompass Health Rehabilitation Hospital of Richmond",
+        phoneNumber: "1234567890",
+        emailId: "Chris@test.com",
+        address: "1465 East Parkdale Avenue, Manistee, Michigan(MI) 49660",
+        averageNumberofBox: "6",
+        averageNumberofPallets: "4",
+        averageNumberofControls: "12",
+        averageTimeSpent: "3 hours",
+      },
+      {
+        id: 11,
+        state: "paused",
+        time: "01:00 - 05:00",
+        name:
+          "Pharmacy C | Encompass Health Rehabilitation Hospital of Richmond",
+        start: "2021-05-31 01:00:00",
+        end: "2021-05-31 05:00:00",
+        color: "green",
+        duration: "3",
+        orderNumber: "t6UJ9A005GXH",
+        customerName: "Encompass Health Rehabilitation Hospital of Richmond",
+        phoneNumber: "1234567890",
+        emailId: "Chris@test.com",
+        address: "1465 East Parkdale Avenue, Manistee, Michigan(MI) 49660",
+        averageNumberofBox: "6",
+        averageNumberofPallets: "4",
+        averageNumberofControls: "12",
+        averageTimeSpent: "3 hours",
+      },
+      {
+        id: 12,
+        state: "paused",
+        time: "01:00 - 05:00",
+        name:
+          "Pharmacy C | Encompass Health Rehabilitation Hospital of Richmond",
+        start: "2021-05-30 01:00:00",
+        end: "2021-05-30 05:00:00",
         color: "green",
         duration: "3",
         orderNumber: "t6UJ9A005GXH",
@@ -718,19 +860,32 @@ export default {
         return "#F9CDD0";
       } else if (event.state === "confirmed") {
         return "#E8F4FE";
-      } else {
+      } else if (event.state === "unconfirmed") {
         return "#EFF0F6";
       }
+      return "#FFF0D2";
     },
     getButtonText(event) {
       if (event.state === "complete") {
         return "Service Completed";
       } else if (event.state === "cancelled") {
         return "Cancelled Service";
-      } else if (event.state === "confirmed") {
+      } else if (event.state === "confirmed" || event.state === "unconfirmed") {
         return "Begin Inventory";
       } else {
-        return "Begin Inventory";
+        return "Paused Service";
+      }
+    },
+
+    getButtonIcon(event) {
+      if (event.state === "complete") {
+        return "mdi-checkbox-marked-circle";
+      } else if (event.state === "cancelled") {
+        return "mdi-close-circle";
+      } else if (event.state === "confirmed" || event.state === "unconfirmed") {
+        return "mdi-checkbox-marked-circle";
+      } else {
+        return "mdi-pause-circle";
       }
     },
 
@@ -741,9 +896,10 @@ export default {
         return "#B30000";
       } else if (event.state === "confirmed") {
         return "#0063A7";
-      } else {
+      } else if (event.state === "unconfirmed") {
         return "#76777A";
       }
+      return "#FDB825";
     },
 
     IsStatusMatched(arr, val) {
@@ -759,9 +915,10 @@ export default {
         return "cancelledBorderColor";
       } else if (event.state === "confirmed") {
         return "confirmedBorderColor";
-      } else {
+      } else if (event.state === "unconfirmed") {
         return "unconfirmedBorderColor";
       }
+      return "pausedBorderColor";
     },
     functionEvents(date) {
       var colorArray = [];
@@ -774,10 +931,12 @@ export default {
         var isCancelled = this.IsStatusMatched(filterdEvents, "cancelled");
         var isConfirmed = this.IsStatusMatched(filterdEvents, "cancelled");
         var isUnconfirmed = this.IsStatusMatched(filterdEvents, "unconfirmed");
+        var isPaused = this.IsStatusMatched(filterdEvents, "paused");
         if (isCompleted) colorArray.push("#0DBA61");
         if (isCancelled) colorArray.push("#B30000");
         if (isConfirmed) colorArray.push("#0063A7");
         if (isUnconfirmed) colorArray.push("#76777A");
+        if (isPaused) colorArray.push("#FDB825");
         return colorArray;
       }
       return false;
@@ -811,6 +970,31 @@ export default {
     },
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a;
+    },
+
+    allowedDates(val) {
+      var nextDate = new Date();
+      nextDate.setDate(nextDate.getDate() + 21);
+      var previousDate = new Date();
+      previousDate.setDate(previousDate.getDate() - 7);
+      var currentDate = new Date(val);
+
+      if (
+        currentDate.getTime() >= previousDate.getTime() &&
+        currentDate.getTime() <= nextDate.getTime()
+      )
+        return true;
+      return false;
+    },
+  },
+  computed: {
+    todaysEvent: function () {
+      var selectedDate = this.focus;
+      console.log(new Date(this.events[0].start).toISOString().substr(0, 10));
+      return this.events.filter(function (event) {
+        var startDate = new Date(event.start).toISOString().substr(0, 10);
+        return selectedDate === startDate;
+      });
     },
   },
 };

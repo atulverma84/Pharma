@@ -40,11 +40,9 @@
         </v-col>
       </v-row>
 
-      <v-row style="align-content:center">
+      <v-row style="align-content: center">
         <v-col>
-          <v-btn depressed @click="postToFile" color="primary">
-            Save
-          </v-btn>
+          <v-btn depressed @click="postToFile" color="primary"> Save </v-btn>
         </v-col>
         <v-col>
          <v-btn
@@ -136,7 +134,7 @@ export default {
     ],
   }),
   methods: {
-    postToFile: function() {
+    postToFile: function () {
       const valid = this.$refs.form.validate();
       if (!valid) return;
 
@@ -197,7 +195,7 @@ export default {
           }
         });
     },
-    hide_alert: function() {
+    hide_alert: function () {
       console.log("Hide");
       // `event` is the native DOM event
       window.setInterval(() => {
@@ -205,11 +203,11 @@ export default {
         //console.log("hide alert after 3 seconds");
       }, 3000);
     },
-    dateTime: function(value) {
+    dateTime: function (value) {
       return moment(value).format("YYYY-MM-DD");
     },
 
-    fetchData: function() {
+    fetchData: function () {
       // I prefer to use fetch
       // you can use use axios as an alternative
 
@@ -257,13 +255,14 @@ export default {
               this.error.value = json.message;
             });
           }
+          this.$router.push("/error");
         })
         .then(() => {
           this.loadingvariable = false;
         });
     },
   },
-  mounted: function() {
+  mounted: function () {
     this.fetchData();
     if (alert) {
       this.hide_alert();

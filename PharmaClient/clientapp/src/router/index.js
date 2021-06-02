@@ -11,12 +11,14 @@ import OnSiteApp from '../components/OnSiteApp'
 import ModalView from '../components/ModalView'
 import OrderEntryList from '../components/OrderEntryList'
 import ProductList from '../components/ProductList'
+import Handle404Exception from '../components/Exceptions/Handle404Exception'
+import Handle500Exception from '../components/Exceptions/Handle500Exception'
 
 const routes = [
     {
         component: calender,
         name: "calender",
-        path: "/calender"
+        path: "/"
     },
     {
         component: PharmaDetails,
@@ -57,6 +59,21 @@ const routes = [
         component: ProductList,
         name: "ProductList",
         path: "/ProductList"
+    },
+    { 
+        component: Handle500Exception,
+        name: 'Handle500Exception', 
+        path: '/error',
+    },
+    {
+        path: '/PharmaDetails',
+        name: 'PharmaDetails',
+        component: PharmaDetails
+    },
+    {
+        path: '*',
+        name: 'Handle404Exception',   
+        component: Handle404Exception
     }
 ];
 
