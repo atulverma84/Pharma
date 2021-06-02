@@ -1,22 +1,22 @@
 <template>
   <div>
     
-    <v-container id="svcBook" class="grey lighten-5 mb-6" fluid>
+    <div id="svcBook" class="light-background mb-6 pt-10 pl-10 pr-10" fluid>
       <h5>General Stats:</h5>
       <br>
       <v-spacer></v-spacer>
 
       <!-- General Stats Container -->
         <!-- Stats #1 - Average number of boxes -->
-        <v-row max-height="80px" justify="space-between">
-          <v-col md="1" class="text-right">
+        <v-row  justify="space-between">
+          <v-col md="1" class="text-right" style="margin-left:-4%">
             <v-avatar color="#B7DEFF">
               <v-icon color="rgba(0, 99, 167, 1)">mdi-package-variant-closed</v-icon>
             </v-avatar>
           </v-col>
           <v-col md="2">
-            <h4>{{ this.numberOfBoxes }}</h4>
-            <p>Average No. of Boxes</p>
+            <p style="font-weight:bold">{{ this.numberOfBoxes }}</p>
+            <p style="font-weight:bold">Average No. of Boxes</p>
           </v-col>
           <!-- End of Stats #1 - Average number of boxes -->
 
@@ -27,8 +27,8 @@
             </v-avatar>
           </v-col>
           <v-col md="2">
-            <h4>{{ this.avgNumOfPallets }}</h4>
-            <p>Average No. of Pallets</p>
+            <p style="font-weight:bold">{{ this.avgNumOfPallets }}</p>
+            <p style="font-weight:bold">Average No. of Pallets</p>
           </v-col>
           <!-- End of Stats #2 - Average number of pallets -->
 
@@ -39,8 +39,8 @@
             </v-avatar>
           </v-col>
           <v-col md="2">
-            <h4>{{ this.avgNumOfControls }}</h4>
-            <p>Average No. of Controls</p>
+            <p style="font-weight:bold">{{ this.avgNumOfControls }}</p>
+            <p style="font-weight:bold">Average No. of Controls</p>
           </v-col>
           <!-- End of Stats #3 - Average number of controls -->
 
@@ -51,108 +51,106 @@
             </v-avatar>
           </v-col>
           <v-col md="2">
-            <h4>{{ this.avgTimeSpent }}</h4>
-            <p>Average Time Spent</p>
+            <p style="font-weight:bold">{{ this.avgTimeSpent }} hours</p>
+            <p style="font-weight:bold">Average Time Spent</p>
           </v-col>
           <!-- End of Stats #4 - Average time spent -->
         </v-row>
       <!-- End of General Stats Container -->
-    </v-container>
+    </div>
 
     <v-spacer></v-spacer>
 
-    <v-container id="panels" class="grey lighten-5 mb-6" fluid>
+    <div id="panels" class="mb-6" fluid>
       <!-- Service Book Section -->
       <v-expansion-panels>
 
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <h5>Contacts</h5>
+        <v-expansion-panel class="mt-5">
+          <v-expansion-panel-header class="light-background" @click="headerClicked = !headerClicked">
+            <h5 :class="{ blueHeader: headerClicked }">Contacts</h5>
             <template v-slot:actions>
               <v-icon color="rgba(0, 99, 167, 1)">
                 mdi-plus
               </v-icon>
             </template>
           </v-expansion-panel-header>
-          <v-expansion-panel-content>
+          <v-expansion-panel-content class="light-background">
             <Contacts />
           </v-expansion-panel-content>
         </v-expansion-panel>
 
-        <v-divider></v-divider>
-
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <h5>Hours of Operation</h5>
+        <v-expansion-panel class="mt-5">
+          <v-expansion-panel-header class="light-background" @click="headerClicked = !headerClicked">
+            <h5 :class="{ blueHeader: headerClicked }">Hours of Operation</h5>
             <template v-slot:actions>
               <v-icon color="rgba(0, 99, 167, 1)">
                 mdi-plus
               </v-icon>
             </template>
           </v-expansion-panel-header>
-          <v-expansion-panel-content>
+          <v-expansion-panel-content class="light-background">
             <HoursOfOperation />
           </v-expansion-panel-content>
         </v-expansion-panel>
 
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <h5>Pre-Service</h5>
+        <v-expansion-panel class="mt-5">
+          <v-expansion-panel-header class="light-background" @click="headerClicked = !headerClicked">
+            <h5 :class="{ blueHeader: headerClicked }">Pre-Service</h5>
             <template v-slot:actions>
               <v-icon color="rgba(0, 99, 167, 1)">
                 mdi-plus
               </v-icon>
             </template>
           </v-expansion-panel-header>
-          <v-expansion-panel-content>
+          <v-expansion-panel-content class="light-background">
             <PreService />
           </v-expansion-panel-content>
         </v-expansion-panel>
 
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <h5>Service</h5>
+        <v-expansion-panel class="mt-5">
+          <v-expansion-panel-header class="light-background"  @click="headerClicked = !headerClicked">
+            <h5 :class="{ blueHeader: headerClicked }">Service</h5>
             <template v-slot:actions>
               <v-icon color="rgba(0, 99, 167, 1)">
                 mdi-plus
               </v-icon>
             </template>
           </v-expansion-panel-header>
-          <v-expansion-panel-content>
+          <v-expansion-panel-content class="light-background">
             <Service />
           </v-expansion-panel-content>
         </v-expansion-panel>
 
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <h5>Post-Service</h5>
+        <v-expansion-panel class="mt-5">
+          <v-expansion-panel-header class="light-background"  @click="headerClicked = !headerClicked">
+            <h5 :class="{ blueHeader: headerClicked }">Post-Service</h5>
             <template v-slot:actions>
               <v-icon color="rgba(0, 99, 167, 1)">
                 mdi-plus
               </v-icon>
             </template>
           </v-expansion-panel-header>
-          <v-expansion-panel-content>
+          <v-expansion-panel-content class="light-background">
             <PostService />
           </v-expansion-panel-content>
         </v-expansion-panel>
 
-        <v-expansion-panel>
-          <v-expansion-panel-header>
-            <h5>Comments</h5>
+        <v-expansion-panel class="mt-5">
+          <v-expansion-panel-header class="light-background" @click="headerClicked = !headerClicked">
+            <h5 :class="{ blueHeader: headerClicked }">Comments</h5>
             <template v-slot:actions>
               <v-icon color="rgba(0, 99, 167, 1)">
                 mdi-plus
               </v-icon>
             </template>
           </v-expansion-panel-header>
-          <v-expansion-panel-content>
+          <v-expansion-panel-content class="light-background">
             <Comments />
           </v-expansion-panel-content>
         </v-expansion-panel>
 
       </v-expansion-panels>
-    </v-container>
+    </div>
     <!-- End of Service Book Section -->
   </div>
 </template>
@@ -180,12 +178,15 @@
         numberOfBoxes: 6,
         avgNumOfPallets: 4,
         avgNumOfControls: 12,
-        avgTimeSpent: 2
+        avgTimeSpent: 2,
+        icon: 'mdi-plus',
+        headerClicked: false
       }
     },
     methods: {
       changeIcon() {
         this.icon = 'mdi-minus'
+        this.headerClicked = true
       }
     }
   }
@@ -215,5 +216,11 @@
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
+  }
+
+  .light-background{background-color:#F7F9FE}
+
+  .blueHeader { 
+    color: #0063A7 !important 
   }
 </style>
