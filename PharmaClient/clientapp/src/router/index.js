@@ -59,6 +59,7 @@ const routes = [
         component: ProductList,
         name: "ProductList",
         path: "/ProductList"
+    },
     { 
         component: Handle500Exception,
         name: 'Handle500Exception', 
