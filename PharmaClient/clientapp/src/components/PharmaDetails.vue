@@ -237,6 +237,7 @@ export default {
           this.loadingvariable = false;
         })
         .catch((err) => {
+            
           console.log(err);
           this.error = err;
           // In case a custom JSON error response was provided
@@ -247,6 +248,7 @@ export default {
               this.error.value = json.message;
             });
           }
+          this.$router.push('/error');
         })
         .then(() => {
           this.loadingvariable = false;
