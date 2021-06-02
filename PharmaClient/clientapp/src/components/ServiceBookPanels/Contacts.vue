@@ -1,9 +1,9 @@
 <template>
-    <v-container id="svcBook" class="grey lighten-5 mb-6" fluid>
+    <div id="svcBookContacts" class="mb-6" fluid>
 
         <div id="editInfo">
             <!-- Edit Information Button -->
-            <v-row row-height="50" justify="end">
+            <v-row justify="end">
                 <v-col md="1" class="text-right">
                     <div id="editButton">
                         <span class="d-flex justify-end mb-4">
@@ -122,7 +122,7 @@
             </v-row>
         </div>
 
-    </v-container>
+    </div>
 </template>
 
 <script>
@@ -186,7 +186,6 @@
 
     #schContactInfo,
     #svcContactInfo {
-        margin: 0 auto;
         padding: 1%;
     }
 

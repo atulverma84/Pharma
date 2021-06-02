@@ -9,12 +9,12 @@
                 </v-btn>{{ this.jobTitle }}
             </span>
             <!-- End of Back Button -->
-            <v-spacer />
+            <v-spacer style="margin-top: 2%;"/>
 
             <!-- <v-card> -->
 
             <!-- Tabs -->
-            <v-tabs v-model="tab" max-height="10px" grow light icons-and-text>
+            <v-tabs v-model="tab" height="100%" grow light icons-and-text>
                 <v-tab v-for="tab in tabs" :key="tab" :id="'tab'+tab.id" @click="toggleTabs(tab)">
                     <span>
                         <h4>
@@ -59,7 +59,7 @@
 
                     <!-- Start Service Button -->
                     <div id="divStartService">
-                        <v-btn id="btnStartSvc" x-large dark @click="startService">
+                        <v-btn id="btnStartSvc" large dark @click="startService">
                             Start Service
                         </v-btn>
                     </div>
@@ -72,13 +72,7 @@
 
                 <!-- Service Book Tab -->
                 <v-tab-item>
-                    <v-card flat>
-                        <v-card-title class="headline">
-                        </v-card-title>
-                        <v-card-text>
-                            <service-book />
-                        </v-card-text>
-                    </v-card>
+                    <service-book />
                 </v-tab-item>
                 <!-- End of Service Book Tab -->
 
@@ -213,15 +207,9 @@
     }
 
     #btnStartSvc {
-        background-color: rgba(0, 99, 167, 1);
-        color: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 12px 42px;
-        position: static;
-        width: 300px;
-        height: 53px;
+        background-color: rgba(0, 99, 167, 1);        
+        padding: 12px 60px;
+        position: static;        
         left: calc(50% - 300px/2);
         top: calc(50% - 53px/2);
     }
@@ -310,5 +298,6 @@
     .left-right-space {
         margin-left: 5%;
         margin-right: 5%;
+        margin-top: 2%;
     }
 </style>

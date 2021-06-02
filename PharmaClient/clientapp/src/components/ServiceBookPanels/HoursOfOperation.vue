@@ -1,5 +1,7 @@
 <template>
-  <v-container id="hoursOfOp" class="grey lighten-5" fluid>
+
+  <div id="svcBookHOP" class="mb-6" fluid>
+
     <v-row v-model="item">
       <v-col v-for="item in workHoursByDay" :key="item" class="custom7cols">
         <h5>{{ item.day }}</h5>
@@ -16,68 +18,68 @@
 
     <v-row>
       <v-col md="2">
-        <h5>Minutes on Site:</h5> 
+        <h5>Minutes on Site:</h5>
       </v-col>
       <v-col md="1" justify-end>
-        <p>{{ this.minutesOnSite }}</p> 
+        <p>{{ this.minutesOnSite }}</p>
       </v-col>
     </v-row>
-  </v-container>
+  </div>
+
 </template>
 
 <script>
-export default {
-  name: 'HoursOfOperation',
-  data() {
-    return {
-      minutesOnSite: '180',
-      workHoursByDay: [
-        {
-          day: 'Monday',
-          workingHours: '8:00 am - 5:00 pm'
-        },
-        {
-          day: 'Tuesday',
-          workingHours: '8:00 am - 5:00 pm'
-        },
-        {
-          day: 'Wednesday',
-          workingHours: '8:00 am - 5:00 pm'
-        },
-        {
-          day: 'Thursday',
-          workingHours: '8:00 am - 5:00 pm'
-        },
-        {
-          day: 'Friday',
-          workingHours: '8:00 am - 5:00 pm'
-        },
-        {
-          day: 'Saturday',
-          workingHours: 'Closed'
-        },
-        {
-          day: 'Sunday',
-          workingHours: 'Closed'
-        }
-      ]
+  export default {
+    name: 'HoursOfOperation',
+    data() {
+      return {
+        minutesOnSite: '180',
+        workHoursByDay: [{
+            day: 'Monday',
+            workingHours: '8:00 am - 5:00 pm'
+          },
+          {
+            day: 'Tuesday',
+            workingHours: '8:00 am - 5:00 pm'
+          },
+          {
+            day: 'Wednesday',
+            workingHours: '8:00 am - 5:00 pm'
+          },
+          {
+            day: 'Thursday',
+            workingHours: '8:00 am - 5:00 pm'
+          },
+          {
+            day: 'Friday',
+            workingHours: '8:00 am - 5:00 pm'
+          },
+          {
+            day: 'Saturday',
+            workingHours: 'Closed'
+          },
+          {
+            day: 'Sunday',
+            workingHours: 'Closed'
+          }
+        ]
+      }
     }
   }
-}
 </script>
 
 <style>
-p {
-font-family: Arial;
-font-style: normal;
-font-weight: normal;
-font-size: 20px;
-line-height: 160%;
-}
+  p {
+    font-family: Arial;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 160%;
+  }
 
-.custom7cols {
-  width: 14%;
-  max-width: 14%;
-  flex-basis: 14%;
-}
+  .custom7cols {
+    width: 14%;
+    max-width: 14%;
+    flex-basis: 14%;
+  }
 </style>
