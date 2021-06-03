@@ -2,27 +2,12 @@
     <div id="svcBookContacts" class="mb-6" fluid>
 
         <div id="editInfo">
-            <!-- Edit Information Button -->
-            <v-row justify="end">
-                <v-col md="1" class="text-right">
-                    <div id="editButton">
-                        <span class="d-flex justify-end mb-4">
-                            <v-btn color="primary" dark @click="EditInfo" icon>
-                                <v-icon left fab>
-                                    mdi-square-edit-outline
-                                </v-icon>
-                                Edit Information
-                            </v-btn>
-                        </span>
-                    </div>
-                </v-col>
-            </v-row>
-            <!-- End of Edit Information Button -->
+            <EditInformation v-on:clicked="onClickEditInfo"></EditInformation>
 
-            <v-row>
+            <v-row no-gutters>
                 <!-- Scheduled Contact Info -->
                 <div id="schContactInfo">
-                    <v-row>
+                    <v-row no-gutters>
                         <v-col>
                             <h2>Scheduling Contact:</h2>
                         </v-col>
@@ -66,7 +51,7 @@
 
                 <!-- Service Contact Info -->
                 <div id="svcContactInfo">
-                    <v-row>
+                    <v-row no-gutters>
                         <v-col>
                             <h2>Service Contacts:</h2>
                         </v-col>
@@ -126,8 +111,13 @@
 </template>
 
 <script>
+    import EditInformation from './Helpers/EditInformation'
+
     export default {
         name: 'Contacts',
+        components: {
+            EditInformation   
+        },
         data() {
             return {
                 isEditing: false,
@@ -150,9 +140,8 @@
             }
         },
         methods: {
-            EditInfo() {
-                this.isEditing = true
-                console.log("Edit Button clicked.")
+            onClickEditInfo(value) {
+                this.isEditing = value
             },
             Cancel() {
                 this.isEditing = false
@@ -182,11 +171,6 @@
         justify-content: flex-start;
         margin-left: auto;
         margin-right: 30;
-    }
-
-    #schContactInfo,
-    #svcContactInfo {
-        padding: 1%;
     }
 
     #editButton .editBtn {

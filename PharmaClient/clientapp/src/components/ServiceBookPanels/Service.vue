@@ -2,25 +2,10 @@
   <div id="svcBookSvc" class="mb-6" fluid>
 
     <div id="editInfo">
-      <!-- Edit Information Button and Dialog -->
-      <v-row row-height="50" justify="end">
-        <v-col md="1" class="text-right">
-          <div id="editButton">
-            <span class="d-flex justify-end mb-4">
-              <v-btn color="primary" dark @click="EditInfo" icon>
-                <v-icon left fab>
-                  mdi-square-edit-outline
-                </v-icon>
-                Edit Information
-              </v-btn>
-            </span>
-          </div>
-        </v-col>
-      </v-row>
-      <!-- End of Edit Information Button and Dialog -->
+      <EditInformation v-on:clicked="onClickEditInfo"></EditInformation>
 
       <!-- Service Questions and Answers -->
-      <v-row v-for="(item,i) in svcQuestions" :key="i" :id="'answerRow'+item.number">
+      <v-row v-for="(item,i) in svcQuestions" :key="i" :id="'answerRow'+item.number" no-gutters>
         <v-col md="6">
           <h4>{{ item.number }}. {{ item.question }}</h4>
         </v-col>
@@ -53,8 +38,13 @@
 </template>
 
 <script>
+  import EditInformation from './Helpers/EditInformation'
+
   export default {
     name: 'Service',
+    components: {
+        EditInformation   
+    },
     data() {
       return {
         dialog: false,
@@ -97,10 +87,9 @@
       }
     },
     methods: {
-      EditInfo() {
-        this.isEditing = true
-        console.log("Edit Button clicked.")
-      },
+      onClickEditInfo(value) {
+                this.isEditing = value
+            },
       Cancel() {
         this.isEditing = false
       },
