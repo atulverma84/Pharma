@@ -1,1003 +1,929 @@
 <style scoped>
-/* div .theme--light.v-calendar-events .v-event-timed {
+    .v-date-picker-table__events > div {
+        border-radius: 50%;
+        display: inline-block;
+        height: 8px;
+        margin: 0 1px;
+        width: 5px !important;
+    }
+    .paused {
+        border-left: 8px solid #fdb825 !important;
+        height: 100%;
+        width: 100%;
+    }
+
+    .complete {
+        border-left: 8px solid #0dba61 !important;
+        height: 100%;
+        width: 100%;
+    }
+
+    .cancelled {
+        border-left: 8px solid #b30000 !important;
+        height: 100%;
+        width: 100%;
+    }
+
+    .confirmed {
+        border-left: 8px solid #0063a7 !important;
+        height: 100%;
+        width: 100%;
+    }
+
+    .unconfirmed {
+        border-left: 8px solid #76777a !important;
+        height: 100%;
+        width: 100%;
+    }
+
+    .event-header-time {
+        font-size: 16px;
+        margin-bottom: 5px !important;
+        color: black;
+    }
+
+    .event-header-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: black;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .completedot {
+        height: 32px;
+        width: 32px;
+        background-color: #0dba61;
+        border-radius: 50%;
+        display: inline-block;
+        float: left;
+    }
+
+    .cancelleddot {
+        height: 32px;
+        width: 32px;
+        background-color: #b30000;
+        border-radius: 50%;
+        display: inline-block;
+        float: left;
+    }
+
+    .confirmedDot {
+        height: 32px;
+        width: 32px;
+        background-color: #0063a7;
+        border-radius: 50%;
+        float: left;
+    }
+
+    .unconfirmedDot {
+        height: 32px;
+        width: 32px;
+        background-color: #76777a;
+        border-radius: 50%;
+        display: inline-block;
+        float: left;
+    }
+
+    .pausedDot {
+        height: 32px;
+        width: 32px;
+        background-color: #fdb825;
+        border-radius: 50%;
+        display: inline-block;
+        float: left;
+    }
+
+    .maxDiv {
+        height: 100%;
+        width: 100%;
+    }
+
+    .calenderDiv {
+        width: 280px;
         border-radius: 8px;
-        border-left: 8px solid blue !important;
-    }*/
+        background-color: white;
+        text-align: center;
+        height: 100%;
+    }
+    .serviceContact {
+        width: 280px;
+        border-radius: 8px;
+        background-color: white;
+    }
+    .completeBorderColor {
+        border: 1px solid #0dba61 !important;
+    }
 
-.v-date-picker-table__events > div {
-  border-radius: 50%;
-  display: inline-block;
-  height: 8px;
-  margin: 0 1px;
-  width: 5px !important;
-}
+    .cancelledBorderColor {
+        border: 1px solid #b30000 !important;
+    }
 
-.paused {
-  border-left: 8px solid #fdb825 !important;
-  height: 100%;
-  width: 100%;
-}
+    .confirmedBorderColor {
+        border: 1px solid #0063a7 !important;
+    }
 
-.complete {
-  border-left: 8px solid #0dba61 !important;
-  height: 100%;
-  width: 100%;
-}
+    .unconfirmedBorderColor {
+        border: 1px solid #76777a !important;
+    }
 
-.cancelled {
-  border-left: 8px solid #b30000 !important;
-  height: 100%;
-  width: 100%;
-}
+    .pausedBorderColor {
+        border: 1px solid #fdb825 !important;
+    }
 
-.confirmed {
-  border-left: 8px solid #0063a7 !important;
-  height: 100%;
-  width: 100%;
-}
+    .listHover:hover {
+        background-color: rgb(247, 249, 254) !important;
+        cursor: pointer;
+    }
 
-.unconfirmed {
-  border-left: 8px solid #76777a !important;
-  height: 100%;
-  width: 100%;
-}
+    .serviceBookList {
+        float: left;
+        font-size: 14px;
+        width: 100%;
+        height: 250px;
+        overflow: scroll-y;
+        overflow-x: hidden;
+    }
 
-.event-header-time {
-  font-size: 16px;
-  margin-bottom: 5px !important;
-  color: black;
-}
+    .serviceBookHeader {
+        font-size: 14px;
+        float: right;
+        color: rgb(25, 118, 210);
+    }
 
-.event-header-name {
-  font-size: 18px;
-  font-weight: bold;
-  color: black;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.completedot {
-  height: 32px;
-  width: 32px;
-  background-color: #0dba61;
-  border-radius: 50%;
-  display: inline-block;
-  float: left;
-}
-
-.cancelleddot {
-  height: 32px;
-  width: 32px;
-  background-color: #b30000;
-  border-radius: 50%;
-  display: inline-block;
-  float: left;
-}
-
-.confirmedDot {
-  height: 32px;
-  width: 32px;
-  background-color: #0063a7;
-  border-radius: 50%;
-  float: left;
-}
-
-.unconfirmedDot {
-  height: 32px;
-  width: 32px;
-  background-color: #76777a;
-  border-radius: 50%;
-  display: inline-block;
-  float: left;
-}
-
-.pausedDot {
-  height: 32px;
-  width: 32px;
-  background-color: #fdb825;
-  border-radius: 50%;
-  display: inline-block;
-  float: left;
-}
-
-.maxDiv {
-  height: 100%;
-  width: 100%;
-}
-
-.calenderDiv {
-  width: 280px;
-  border-radius: 8px;
-  background-color: white;
-  text-align: center;
-  height: 100%;
-}
-
-.completeBorderColor {
-  border: 1px solid #0dba61 !important;
-}
-
-.cancelledBorderColor {
-  border: 1px solid #b30000 !important;
-}
-
-.confirmedBorderColor {
-  border: 1px solid #0063a7 !important;
-}
-
-.unconfirmedBorderColor {
-  border: 1px solid #76777a !important;
-}
-
-.pausedBorderColor {
-  border: 1px solid #fdb825 !important;
-}
+    .legendImage {
+        position: absolute;
+        width: 32px;
+    }
 </style>
 
 <template>
-  <v-row class="fill-height">
-    <v-col sm="9">
-      <v-sheet height="64">
-        <!--<v-toolbar flat>
-                                    <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
-                                        Today
+    <v-row class="fill-height">
+        <v-col sm="9">
+            <v-sheet height="55" class="mb-3">
+                <v-toolbar flat>
+
+                    <div style="float:left; width:20%">
+                        <h1 class=" pl-5">Hello Alex! </h1>
+                    </div>
+                    <div style="float:right; width:80%">
+                        <div style="float:left; width:60% ; text-align:right">
+                            Total Daily Route: {{totalWorkingHours()}} hours
+                        </div>
+                        <div style="float:right; width:40%; text-align:right">
+                            <v-icon medium color="#1976d2">mdi-clock</v-icon>  CDT - Central Daylight Time
+                        </div>
+                    </div>
+                </v-toolbar>
+            </v-sheet>
+            <v-sheet height="600">
+                <v-calendar ref="calendar"
+                            hide-header
+                            v-model="focus"
+                            color="primary"
+                            :events="events"
+                            :event-color="getStatusColor"
+                            :type="type"
+                            interval-height="72"
+                            @click:event="showEvent"
+                            @click:more="viewDay"
+                            @click:date="viewDay">
+                    <template v-slot:event="{ event }">
+                        <div :class="event.state">
+                            <div class="pa-3" style="width: 100%">
+                                <div style="float: left; width: 75%">
+                                    <p class="event-header-time">
+                                        {{ event.time }}
+                                    </p>
+                                    <div class="event-header-name mt-n1">
+                                        {{ event.name }}
+                                    </div>
+                                </div>
+                                <div style="float: right; width: 25%">
+                                    <v-btn :color="getDarkStatusColor(event)"
+                                           class="event-header-btn pa-0"
+                                           text
+                                           to="/StartService"
+                                           @click.native.stop>
+                                        <v-icon class="pr-1">{{ getButtonIcon(event) }}</v-icon>
+                                        {{ getButtonText(event) }}
+                                        <v-icon class="pl-1">mdi-arrow-right</v-icon>
                                     </v-btn>
-                                    <v-btn fab text small color="grey darken-2" @click="prev">
-                                        <v-icon small> mdi-chevron-left </v-icon>
-                                    </v-btn>
-                                    <v-btn fab text small color="grey darken-2" @click="next">
-                                        <v-icon small> mdi-chevron-right </v-icon>
-                                    </v-btn>
+                                </div>
+                            </div>
+                            <div v-if="event.duration >= 3" class="maxDiv">
+                                <div style="font-size: 16px; white-space: normal"
+                                     class="maxDiv">
+                                    <v-list :color="getStatusColor(event)" class="maxDiv pa-0">
+                                        <v-divider :color="getDarkStatusColor(event)"
+                                                   class="mt-10"></v-divider>
 
-                                    <v-toolbar-title v-if="$refs.calendar">
-                                        {{ $refs.calendar.title }}
-                                    </v-toolbar-title>
-                                </v-toolbar>-->
-        <h1 class="pt-2 pl-5">Hello Alex!</h1>
-      </v-sheet>
-      <v-sheet height="600">
-        <v-calendar
-          ref="calendar"
-          hide-header
-          v-model="focus"
-          color="primary"
-          :events="events"
-          :event-color="getStatusColor"
-          :type="type"
-          interval-height="72"
-          @click:event="showEvent"
-          @click:more="viewDay"
-          @click:date="viewDay"
-        >
-          <template v-slot:event="{ event }">
-            <div :class="event.state">
-              <div class="pa-3" style="width: 100%">
-                <div style="float: left; width: 75%">
-                  <p class="event-header-time">
-                    {{ event.time }}
-                  </p>
-                  <div class="event-header-name mt-n1">
-                    {{ event.name }}
-                  </div>
+                                        <v-row class="maxDiv ma-0 pl-5 pt-1">
+                                            <v-col sm="4" class="maxDiv pa-0 ma-0">
+                                                <v-row class="mt-0 mb-0">
+                                                    <v-col sm="1" class="pa-1">
+                                                        <v-icon medium :color="getDarkStatusColor(event)">mdi-file-outline</v-icon>
+                                                    </v-col>
+                                                    <v-col sm="11" class="pa-1">
+                                                        <b>Order No.:</b>
+                                                        {{ event.orderNumber }}
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row class="mt-0 mb-0">
+                                                    <v-col sm="1" class="pa-1">
+                                                        <v-icon medium :color="getDarkStatusColor(event)">
+                                                            mdi-account
+                                                        </v-icon>
+                                                    </v-col>
+                                                    <v-col sm="11" class="pa-1">
+                                                        {{ event.customerName }}
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row class="mt-0 mb-0">
+                                                    <v-col sm="1" class="pa-1">
+                                                        <v-icon medium :color="getDarkStatusColor(event)">
+                                                            mdi-phone
+                                                        </v-icon>
+                                                    </v-col>
+                                                    <v-col sm="11" class="pa-1">
+                                                        {{ event.phoneNumber }}
+                                                    </v-col>
+                                                </v-row>
+                                            </v-col>
+                                            <v-col sm="4" class="maxDiv pa-0 ma-0">
+                                                <v-row class="mt-0 mb-1">
+                                                    <v-col sm="1" class="pa-1">
+                                                        <v-icon medium :color="getDarkStatusColor(event)">mdi-email</v-icon>
+                                                    </v-col>
+                                                    <v-col sm="11" class="pa-1">
+                                                        <a :href="`mailto:${event.emailId}`">
+                                                            {{ event.emailId }}
+                                                        </a>
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row class="mt-0 mb-1">
+                                                    <v-col sm="1" class="pa-1">
+                                                        <v-icon medium :color="getDarkStatusColor(event)">
+                                                            mdi-map-marker
+                                                        </v-icon>
+                                                    </v-col>
+                                                    <v-col sm="11" class="pa-1">
+                                                        {{ event.address }}
+                                                    </v-col>
+                                                </v-row>
+                                            </v-col>
+                                            <v-col sm="4" class="maxDiv pa-0 ma-0">
+                                                <v-row class="mt-0 mb-1">
+                                                    <v-col sm="" class="pa-1">
+                                                        <b>Average No. Boxes :</b>
+                                                    </v-col>
+                                                    <v-col sm="4" class="pa-1">
+                                                        {{ event.averageNumberofBox }}
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row class="mt-0 mb-1">
+                                                    <v-col sm="8" class="pa-1">
+                                                        <b>Average No. of Pallets :</b>
+                                                    </v-col>
+                                                    <v-col sm="4" class="pa-1">
+                                                        {{ event.averageNumberofPallets }}
+                                                    </v-col>
+                                                </v-row>
+
+                                                <v-row class="mt-0 mb-1">
+                                                    <v-col sm="8" class="pa-1">
+                                                        <b>Average No. of Controls :</b>
+                                                    </v-col>
+                                                    <v-col sm="4" class="pa-1">
+                                                        {{ event.averageNumberofControls }}
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row class="mt-0 mb-1">
+                                                    <v-col sm="8" class="pa-1">
+                                                        <b>Average Time Spent :</b>
+                                                    </v-col>
+                                                    <v-col sm="4" class="pa-1">
+                                                        <b></b>{{ event.averageTimeSpent }}
+                                                    </v-col>
+                                                </v-row>
+                                            </v-col>
+                                        </v-row>
+                                    </v-list>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </v-calendar>
+
+                <v-menu v-model="selectedOpen"
+                        :close-on-content-click="false"
+                        :activator="selectedElement"
+                        offset-y
+                        max-width="800"
+                        min-width="800">
+                    <v-card :color="getStatusColor(selectedEvent)"
+                            :class="setBoderColorToCard(selectedEvent)">
+                        <v-list class="pa-0" :color="getStatusColor(selectedEvent)">
+                            <v-list-item>
+                                <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+                            </v-list-item>
+                        </v-list>
+
+                        <v-divider :color="getDarkStatusColor(selectedEvent)"></v-divider>
+
+                        <v-list>
+                            <v-container class="pl-5 pr-5 pt-1 pb-1">
+                                <v-row>
+                                    <v-col sm="4">
+                                        <v-row class="mt-0 mb-1">
+                                            <v-col sm="1" class="pa-1">
+                                                <v-icon small :color="getDarkStatusColor(selectedEvent)">mdi-file-outline</v-icon>
+                                            </v-col>
+                                            <v-col sm="11" class="pa-1">
+                                                <b>Order No.:</b>
+                                                {{ selectedEvent.orderNumber }}
+                                            </v-col>
+                                        </v-row>
+                                        <v-row class="mt-0 mb-1">
+                                            <v-col sm="1" class="pa-1">
+                                                <v-icon small
+                                                        :color="getDarkStatusColor(selectedEvent)">
+                                                    mdi-account
+                                                </v-icon>
+                                            </v-col>
+                                            <v-col sm="11" class="pa-1">
+                                                {{ selectedEvent.customerName }}
+                                            </v-col>
+                                        </v-row>
+                                        <v-row class="mt-0 mb-1">
+                                            <v-col sm="1" class="pa-1">
+                                                <v-icon small
+                                                        :color="getDarkStatusColor(selectedEvent)">
+                                                    mdi-phone
+                                                </v-icon>
+                                            </v-col>
+                                            <v-col sm="11" class="pa-1">
+                                                {{ selectedEvent.phoneNumber }}
+                                            </v-col>
+                                        </v-row>
+                                    </v-col>
+                                    <v-col sm="4">
+                                        <v-row class="mt-0 mb-1">
+                                            <v-col sm="1" class="pa-1">
+                                                <v-icon small :color="getDarkStatusColor(selectedEvent)">mdi-email</v-icon>
+                                            </v-col>
+                                            <v-col sm="11" class="pa-1">
+                                                <a :href="`mailto:${selectedEvent.emailId}`">
+                                                    {{ selectedEvent.emailId }}
+                                                </a>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row class="mt-0 mb-1">
+                                            <v-col sm="1" class="pa-1">
+                                                <v-icon small
+                                                        :color="getDarkStatusColor(selectedEvent)">
+                                                    mdi-map-marker
+                                                </v-icon>
+                                            </v-col>
+                                            <v-col sm="11" class="pa-1">
+                                                {{ selectedEvent.address }}
+                                            </v-col>
+                                        </v-row>
+                                    </v-col>
+                                    <v-col sm="4">
+                                        <v-row class="mt-0 mb-1">
+                                            <v-col sm="9" class="pa-1">
+                                                <b>Average No. Boxes :</b>
+                                            </v-col>
+                                            <v-col sm="3" class="pa-1">
+                                                {{ selectedEvent.averageNumberofBox }}
+                                            </v-col>
+                                        </v-row>
+                                        <v-row class="mt-0 mb-1">
+                                            <v-col sm="9" class="pa-1">
+                                                <b>Average No. of Pallets :</b>
+                                            </v-col>
+                                            <v-col sm="3" class="pa-1">
+                                                {{ selectedEvent.averageNumberofPallets }}
+                                            </v-col>
+                                        </v-row>
+
+                                        <v-row class="mt-0 mb-1">
+                                            <v-col sm="9" class="pa-1">
+                                                <b>Average No. of Controls :</b>
+                                            </v-col>
+                                            <v-col sm="3" class="pa-1">
+                                                {{ selectedEvent.averageNumberofControls }}
+                                            </v-col>
+                                        </v-row>
+                                        <v-row class="mt-0 mb-1">
+                                            <v-col sm="9" class="pa-1">
+                                                <b>Average Time Spent :</b>
+                                            </v-col>
+                                            <v-col sm="3" class="pa-1">
+                                                <b></b>{{ selectedEvent.averageTimeSpent }}
+                                            </v-col>
+                                        </v-row>
+                                    </v-col>
+                                </v-row>
+                            </v-container>
+                        </v-list>
+                        <v-divider :color="getDarkStatusColor(selectedEvent)"></v-divider>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn text
+                                   color="secondary"
+                                   @click="selectedOpen = false"
+                                   height="25">
+                                Cancel
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-menu>
+            </v-sheet>
+        </v-col>
+        <v-col sm="3"
+               style="background-color: #f7f9fe"
+               @mouseleave="isShowDescription = false">
+            <v-row>
+                <div class="mt-6 ml-3 calenderDiv">
+                    <div style="font-size: 20px; float: left" class="ml-6">
+                        <b>Your Work Calendar:</b>
+                    </div>
+                    <div class="mt-1 listHover">
+                        <v-icon medium color="#1976d2" @mouseover="isShowDescription = true">mdi-information</v-icon>
+                    </div>
+                    <v-date-picker v-model="focus"
+                                   color="primary"
+                                   full-width
+                                   height="200"
+                                   no-title
+                                   :events="functionEvents"
+                                   :allowed-dates="allowedDates"></v-date-picker>
+                    <div v-if="isShowDescription">
+                        <v-list>
+                            <v-row>
+                                <v-col sm="12">
+                                    <div style="font-size: 20px; float: left" class="ml-6">
+                                        <b> Calendar Legend:</b>
+                                    </div>
+                                </v-col>
+                            </v-row>
+                            <v-row class="mt-0">
+                                <v-col sm="12" class="ml-4">
+                                    <v-img src="../images/todaysDate.png"
+                                           class="legendImage">
+                                    </v-img>
+                                    <div style="float: left" class="ml-10 pt-1">Current day</div>
+                                </v-col>
+                            </v-row>
+                            <v-row class="mt-0">
+                                <v-col sm="12" class="ml-4">
+                                    <v-img src="../images/selectedDate.png"
+                                            class="legendImage">
+                                    </v-img>
+                                    <div style="float: left" class="ml-10 pt-1">Selected day</div>
+                                </v-col>
+                            </v-row>
+                            <v-row class="mt-0">
+                                <v-col sm="12" class="ml-4">
+                                    <v-img src="../images/notscheduled.png"
+                                           class="legendImage">
+                                    </v-img>
+                                    <div style="float: left" class="ml-10 pt-1">
+                                        Service not scheduled
+                                    </div>
+                                </v-col>
+                            </v-row>
+                            <v-row class="mt-0">
+                                <v-col sm="12" class="ml-4">
+                                    <span class="completedot"></span>
+
+                                    <div style="float: left" class="ml-2 pt-1">
+                                        Complete service
+                                    </div>
+                                </v-col>
+                            </v-row>
+
+                            <v-row class="mt-0">
+                                <v-col sm="12" class="ml-4">
+                                    <span class="confirmedDot"></span>
+
+                                    <div style="float: left" class="ml-2 pt-1">
+                                        Confirmed service
+                                    </div>
+                                </v-col>
+                            </v-row>
+
+                            <v-row class="mt-0">
+                                <v-col sm="12" class="ml-4">
+                                    <span class="cancelleddot"></span>
+
+                                    <div style="float: left" class="ml-2 pt-1">
+                                        Canceled service
+                                    </div>
+                                </v-col>
+                            </v-row>
+
+                            <v-row class="mt-0">
+                                <v-col sm="12" class="ml-4">
+                                    <span class="unconfirmedDot"></span>
+
+                                    <div style="float: left" class="ml-2 pt-1">
+                                        Scheduled, but not confirmed
+                                    </div>
+                                </v-col>
+                            </v-row>
+                            <v-row class="mt-0">
+                                <v-col sm="12" class="ml-4">
+                                    <span class="pausedDot"></span>
+                                    <div style="float: left" class="ml-2 pt-1">
+                                        Pasued service
+                                    </div>
+                                </v-col>
+                            </v-row>
+                        </v-list>
+                    </div>
                 </div>
-                <div style="float: right; width: 25%">
-                  <v-btn
-                    :color="getDarkStatusColor(event)"
-                    class="event-header-btn pa-0"
-                    text
-                    to="/StartService"
-                    @click.native.stop
-                  >
-                    <v-icon class="pr-1">{{ getButtonIcon(event) }}</v-icon>
-                    {{ getButtonText(event) }}
-                    <v-icon class="pl-1">mdi-arrow-right</v-icon>
-                  </v-btn>
+            </v-row>
+            <v-row v-if="todaysEvent.length>0">
+                <div class="mt-4 mb-2 ml-3 serviceContact">
+                    <div style="font-size: 20px; float: left" class="ml-6">
+                        <b>Service Contacts:</b>
+                    </div>
+                    <div s class="mr-1 listHover serviceBookHeader"  @click="goToServiceBook()">
+                        <b>Service Book</b>  <v-icon medium color="rgb(25, 118, 210)">mdi-book-open-variant</v-icon>
+                    </div>
+                    <div  class="mt-3 pl-6 pr-3 serviceBookList">          
+                            <div v-for="event in todaysEvent" v-bind:key="event.id" style="border-bottom:1px solid #D6D8E7;">
+                                <v-row class="mt-1 mb-0 listHover">
+                                    <v-col sm="1" class="pa-1">
+                                        <v-icon small :color="getDarkStatusColor(event)"> mdi-account</v-icon>
+                                    </v-col>
+                                    <v-col sm="11" class="pa-1">
+                                        {{ event.customerName }}
+
+                                    </v-col>
+                                </v-row>
+                                <v-row class="mt-0 mb-0 listHover">
+                                    <v-col sm="1" class="pa-1">
+                                        <v-icon small :color="getDarkStatusColor(event)"> mdi-phone</v-icon>
+                                    </v-col>
+                                    <v-col sm="11" class="pa-1">
+                                        {{ event.phoneNumber }}
+                                    </v-col>
+                                </v-row>
+                                <v-row class="mt-0 mb-1 listHover">
+                                    <v-col sm="1" class="pa-1">
+                                        <v-icon small :color="getDarkStatusColor(event)"> mdi-email</v-icon>
+                                    </v-col>
+                                    <v-col sm="11" class="pa-1">
+                                      <a :href="`mailto:${event.emailId}`">
+                                                            {{ event.emailId }}
+                                                        </a>
+                                    </v-col>
+                                </v-row>                        
+                            </div>    
+                    </div>
                 </div>
-              </div>
-
-              <div v-if="event.duration >= 3" class="maxDiv">
-                <div
-                  style="font-size: 16px; white-space: normal"
-                  class="maxDiv"
-                >
-                  <v-list :color="getStatusColor(event)" class="maxDiv pa-0">
-                    <v-divider
-                      :color="getDarkStatusColor(event)"
-                      class="mt-10"
-                    ></v-divider>
-
-                    <v-row class="maxDiv ma-0 pl-5 pt-1">
-                      <v-col sm="4" class="maxDiv pa-0 ma-0">
-                        <v-row class="mt-0 mb-0">
-                          <v-col sm="1" class="pa-1">
-                            <v-icon medium :color="getDarkStatusColor(event)"
-                              >mdi-file-outline</v-icon
-                            >
-                          </v-col>
-                          <v-col sm="11" class="pa-1">
-                            <b>Order No.:</b>
-                            {{ event.orderNumber }}
-                          </v-col>
-                        </v-row>
-                        <v-row class="mt-0 mb-0">
-                          <v-col sm="1" class="pa-1">
-                            <v-icon medium :color="getDarkStatusColor(event)">
-                              mdi-account
-                            </v-icon>
-                          </v-col>
-                          <v-col sm="11" class="pa-1">
-                            {{ event.customerName }}
-                          </v-col>
-                        </v-row>
-                        <v-row class="mt-0 mb-0">
-                          <v-col sm="1" class="pa-1">
-                            <v-icon medium :color="getDarkStatusColor(event)">
-                              mdi-phone
-                            </v-icon>
-                          </v-col>
-                          <v-col sm="11" class="pa-1">
-                            {{ event.phoneNumber }}
-                          </v-col>
-                        </v-row>
-                      </v-col>
-                      <v-col sm="4" class="maxDiv pa-0 ma-0">
-                        <v-row class="mt-0 mb-1">
-                          <v-col sm="1" class="pa-1">
-                            <v-icon medium :color="getDarkStatusColor(event)"
-                              >mdi-email</v-icon
-                            >
-                          </v-col>
-                          <v-col sm="11" class="pa-1">
-                            <a :href="`mailto:${event.emailId}`">
-                              {{ event.emailId }}
-                            </a>
-                          </v-col>
-                        </v-row>
-                        <v-row class="mt-0 mb-1">
-                          <v-col sm="1" class="pa-1">
-                            <v-icon medium :color="getDarkStatusColor(event)">
-                              mdi-map-marker
-                            </v-icon>
-                          </v-col>
-                          <v-col sm="11" class="pa-1">
-                            {{ event.address }}
-                          </v-col>
-                        </v-row>
-                      </v-col>
-                      <v-col sm="4" class="maxDiv pa-0 ma-0">
-                        <v-row class="mt-0 mb-1">
-                          <v-col sm="" class="pa-1">
-                            <b>Average No. Boxes :</b>
-                          </v-col>
-                          <v-col sm="4" class="pa-1">
-                            {{ event.averageNumberofBox }}
-                          </v-col>
-                        </v-row>
-                        <v-row class="mt-0 mb-1">
-                          <v-col sm="8" class="pa-1">
-                            <b>Average No. of Pallets :</b>
-                          </v-col>
-                          <v-col sm="4" class="pa-1">
-                            {{ event.averageNumberofPallets }}
-                          </v-col>
-                        </v-row>
-
-                        <v-row class="mt-0 mb-1">
-                          <v-col sm="8" class="pa-1">
-                            <b>Average No. of Controls :</b>
-                          </v-col>
-                          <v-col sm="4" class="pa-1">
-                            {{ event.averageNumberofControls }}
-                          </v-col>
-                        </v-row>
-                        <v-row class="mt-0 mb-1">
-                          <v-col sm="8" class="pa-1">
-                            <b>Average Time Spent :</b>
-                          </v-col>
-                          <v-col sm="4" class="pa-1">
-                            <b></b>{{ event.averageTimeSpent }}
-                          </v-col>
-                        </v-row>
-                      </v-col>
-                    </v-row>
-                  </v-list>
-                </div>
-              </div>
-            </div>
-          </template>
-        </v-calendar>
-
-        <v-menu
-          v-model="selectedOpen"
-          :close-on-content-click="false"
-          :activator="selectedElement"
-          offset-y
-          max-width="800"
-          min-width="800"
-        >
-          <v-card
-            :color="getStatusColor(selectedEvent)"
-            :class="setBoderColorToCard(selectedEvent)"
-          >
-            <v-list class="pa-0" :color="getStatusColor(selectedEvent)">
-              <v-list-item>
-                <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-              </v-list-item>
-            </v-list>
-
-            <v-divider :color="getDarkStatusColor(selectedEvent)"></v-divider>
-
-            <v-list>
-              <v-container class="pl-5 pr-5 pt-1 pb-1">
-                <v-row>
-                  <v-col sm="4">
-                    <v-row class="mt-0 mb-1">
-                      <v-col sm="1" class="pa-1">
-                        <v-icon small :color="getDarkStatusColor(selectedEvent)"
-                          >mdi-file-outline</v-icon
-                        >
-                      </v-col>
-                      <v-col sm="11" class="pa-1">
-                        <b>Order No.:</b>
-                        {{ selectedEvent.orderNumber }}
-                      </v-col>
-                    </v-row>
-                    <v-row class="mt-0 mb-1">
-                      <v-col sm="1" class="pa-1">
-                        <v-icon
-                          small
-                          :color="getDarkStatusColor(selectedEvent)"
-                        >
-                          mdi-account
-                        </v-icon>
-                      </v-col>
-                      <v-col sm="11" class="pa-1">
-                        {{ selectedEvent.customerName }}
-                      </v-col>
-                    </v-row>
-                    <v-row class="mt-0 mb-1">
-                      <v-col sm="1" class="pa-1">
-                        <v-icon
-                          small
-                          :color="getDarkStatusColor(selectedEvent)"
-                        >
-                          mdi-phone
-                        </v-icon>
-                      </v-col>
-                      <v-col sm="11" class="pa-1">
-                        {{ selectedEvent.phoneNumber }}
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                  <v-col sm="4">
-                    <v-row class="mt-0 mb-1">
-                      <v-col sm="1" class="pa-1">
-                        <v-icon small :color="getDarkStatusColor(selectedEvent)"
-                          >mdi-email</v-icon
-                        >
-                      </v-col>
-                      <v-col sm="11" class="pa-1">
-                        <a :href="`mailto:${selectedEvent.emailId}`">
-                          {{ selectedEvent.emailId }}
-                        </a>
-                      </v-col>
-                    </v-row>
-                    <v-row class="mt-0 mb-1">
-                      <v-col sm="1" class="pa-1">
-                        <v-icon
-                          small
-                          :color="getDarkStatusColor(selectedEvent)"
-                        >
-                          mdi-map-marker
-                        </v-icon>
-                      </v-col>
-                      <v-col sm="11" class="pa-1">
-                        {{ selectedEvent.address }}
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                  <v-col sm="4">
-                    <v-row class="mt-0 mb-1">
-                      <v-col sm="9" class="pa-1">
-                        <b>Average No. Boxes :</b>
-                      </v-col>
-                      <v-col sm="3" class="pa-1">
-                        {{ selectedEvent.averageNumberofBox }}
-                      </v-col>
-                    </v-row>
-                    <v-row class="mt-0 mb-1">
-                      <v-col sm="9" class="pa-1">
-                        <b>Average No. of Pallets :</b>
-                      </v-col>
-                      <v-col sm="3" class="pa-1">
-                        {{ selectedEvent.averageNumberofPallets }}
-                      </v-col>
-                    </v-row>
-
-                    <v-row class="mt-0 mb-1">
-                      <v-col sm="9" class="pa-1">
-                        <b>Average No. of Controls :</b>
-                      </v-col>
-                      <v-col sm="3" class="pa-1">
-                        {{ selectedEvent.averageNumberofControls }}
-                      </v-col>
-                    </v-row>
-                    <v-row class="mt-0 mb-1">
-                      <v-col sm="9" class="pa-1">
-                        <b>Average Time Spent :</b>
-                      </v-col>
-                      <v-col sm="3" class="pa-1">
-                        <b></b>{{ selectedEvent.averageTimeSpent }}
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-list>
-            <v-divider :color="getDarkStatusColor(selectedEvent)"></v-divider>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                text
-                color="secondary"
-                @click="selectedOpen = false"
-                height="25"
-              >
-                Cancel
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-menu>
-      </v-sheet>
-    </v-col>
-    <v-col
-      sm="3"
-      style="background-color: #f7f9fe"
-      @mouseleave="isShowDescription = false"
-    >
-      <v-row>
-        <div class="mt-10 ml-3 calenderDiv">
-          <div style="font-size: 20px; float: left" class="ml-6">
-            <b>Your Work Calendar:</b>
-          </div>
-          <div class="mt-1">
-            <v-icon medium color="#1976d2" @mouseover="isShowDescription = true"
-              >mdi-information</v-icon
-            >
-          </div>
-          <v-date-picker
-            v-model="focus"
-            color="primary"
-            full-width
-            height="200"
-            no-title
-            :events="functionEvents"
-            :allowed-dates="allowedDates"
-          ></v-date-picker>
-          <div v-if="isShowDescription">
-            <v-list>
-              <v-row>
-                <v-col sm="12">
-                  <div style="font-size: 20px; float: left" class="ml-6">
-                    <b> Calendar Legend:</b>
-                  </div>
-                </v-col>
-              </v-row>
-              <v-row class="mt-0">
-                <v-col sm="12" class="ml-4">
-                  <v-img
-                    src="../images/todaysDate.png"
-                    style="position: absolute; width: 32px"
-                  >
-                  </v-img>
-                  <div style="float: left" class="ml-10 pt-1">Current day</div>
-                </v-col>
-              </v-row>
-              <v-row class="mt-0">
-                <v-col sm="12" class="ml-4">
-                  <v-img
-                    src="../images/selectedDate.png"
-                    style="position: absolute; width: 32px"
-                  >
-                  </v-img>
-                  <div style="float: left" class="ml-10 pt-1">Selected day</div>
-                </v-col>
-              </v-row>
-              <v-row class="mt-0">
-                <v-col sm="12" class="ml-4">
-                  <v-img
-                    src="../images/notscheduled.png"
-                    style="position: absolute; width: 32px"
-                  >
-                  </v-img>
-                  <div style="float: left" class="ml-10 pt-1">
-                    Service not scheduled
-                  </div>
-                </v-col>
-              </v-row>
-              <v-row class="mt-0">
-                <v-col sm="12" class="ml-4">
-                  <span class="completedot"></span>
-
-                  <div style="float: left" class="ml-2 pt-1">
-                    Complete service
-                  </div>
-                </v-col>
-              </v-row>
-
-              <v-row class="mt-0">
-                <v-col sm="12" class="ml-4">
-                  <span class="confirmedDot"></span>
-
-                  <div style="float: left" class="ml-2 pt-1">
-                    Confirmed service
-                  </div>
-                </v-col>
-              </v-row>
-
-              <v-row class="mt-0">
-                <v-col sm="12" class="ml-4">
-                  <span class="cancelleddot"></span>
-
-                  <div style="float: left" class="ml-2 pt-1">
-                    Canceled service
-                  </div>
-                </v-col>
-              </v-row>
-
-              <v-row class="mt-0">
-                <v-col sm="12" class="ml-4">
-                  <span class="unconfirmedDot"></span>
-
-                  <div style="float: left" class="ml-2 pt-1">
-                    Scheduled, but not confirmed
-                  </div>
-                </v-col>
-              </v-row>
-              <v-row class="mt-0">
-                <v-col sm="12" class="ml-4">
-                  <span class="pausedDot"></span>
-
-                  <div style="float: left" class="ml-2 pt-1">
-                    Pasued service
-                  </div>
-                </v-col>
-              </v-row>
-            </v-list>
-          </div>
-        </div>
-      </v-row>
-    </v-col>
-  </v-row>
+            </v-row>
+        </v-col>
+    </v-row>
 </template>
 
 <script>
-export default {
-  name: "calender",
-  data: () => ({
-    isShowDescription: false,
-    focus: new Date().toISOString().substr(0, 10),
-    type: "day",
-    typeToLabel: {
-      month: "Month",
-      week: "Week",
-      day: "Day",
-      "4day": "4 Days",
-    },
-    selectedEvent: {},
-    selectedElement: null,
-    selectedOpen: false,
-    events: [
-      {
-        id: 1,
-        state: "complete",
-        time: "09:00 - 12:00",
-        name: "Pharmacy B | SUNS008",
-        start: "2021-05-28 9:00:00",
-        end: "2021-05-28 12:00:00",
-        color: "yellow",
-        duration: "3",
-        orderNumber: "t6UJ9A005GXH",
-        customerName: "Chris Test",
-        phoneNumber: "1234567890",
-        emailId: "chris@test.com",
-        address: "Xyz test test",
-        averageNumberofBox: "6",
-        averageNumberofPallets: "4",
-        averageNumberofControls: "12",
-        averageTimeSpent: "3 hours",
-      },
+    export default {
+        name: "calender",
+        data: () => ({
+            isShowDescription: false,
+            focus: new Date().toISOString().substr(0, 10),
+            type: "day",
+            selectedEvent: {},
+            selectedElement: null,
+            selectedOpen: false,
+            events: [
+                {
+                    id: 1,
+                    state: "complete",
+                    time: "09:00 - 12:00",
+                    name: "Pharmacy B | SUNS008",
+                    start: "2021-05-28 9:00:00",
+                    end: "2021-05-28 12:00:00",
+                    color: "yellow",
+                    duration: 3,
+                    orderNumber: "t6UJ9A005GXH",
+                    customerName: "Chris Test",
+                    phoneNumber: "1234567890",
+                    emailId: "chris@test.com",
+                    address: "Xyz test test",
+                    averageNumberofBox: "6",
+                    averageNumberofPallets: "4",
+                    averageNumberofControls: "12",
+                    averageTimeSpent: "3 hours",
+                },
 
-      {
-        id: 2,
-        state: "cancelled",
-        time: "07:00 - 09:00",
-        name: "Pharmacy C | Encompass",
-        start: "2021-05-31 07:00:00",
-        end: "2021-05-31 09:00:00",
-        color: "red",
-        duration: "2",
-        orderNumber: "333",
-        customerName: "Encompass Test",
-        phoneNumber: "1234567890",
-        emailId: "chris@test.com",
-        address: "Xyz test test",
-        averageNumberofBox: "6",
-        averageNumberofPallets: "4",
-        averageNumberofControls: "12",
-        averageTimeSpent: "3 hours",
-      },
+                {
+                    id: 2,
+                    state: "confirmed",
+                    time: "07:00 - 09:00",
+                    name: "Pharmacy C | Encompass",
+                    start: "2021-05-31 07:00:00",
+                    end: "2021-05-31 09:00:00",
+                    color: "red",
+                    duration: 2,
+                    orderNumber: "333",
+                    customerName: "Encompass Test 1",
+                    phoneNumber: "1234567890",
+                    emailId: "chris@test.com",
+                    address: "Xyz test test",
+                    averageNumberofBox: "6",
+                    averageNumberofPallets: "4",
+                    averageNumberofControls: "12",
+                    averageTimeSpent: "3 hours",
+                },
 
-      {
-        id: 3,
-        state: "cancelled",
-        time: "07:00 - 09:00",
-        name: "Pharmacy C | Encompass",
-        start: "2021-05-30 07:00:00",
-        end: "2021-05-30 09:00:00",
-        color: "red",
-        duration: "2",
-        orderNumber: "333",
-        customerName: "Encompass Test",
-        phoneNumber: "1234567890",
-        emailId: "chris@test.com",
-        address: "Xyz test test",
-        averageNumberofBox: "6",
-        averageNumberofPallets: "4",
-        averageNumberofControls: "12",
-        averageTimeSpent: "3 hours",
-      },
-      {
-        id: 4,
-        state: "confirmed",
-        time: "13:00 - 16:00",
-        name:
-          "Pharmacy C | Encompass Health Rehabilitation Hospital of Richmond",
-        start: "2021-05-31 13:00:00",
-        end: "2021-05-31 16:00:00",
-        color: "green",
-        duration: "3",
-        orderNumber: "t6UJ9A005GXH",
-        customerName: "Encompass Health Rehabilitation Hospital of Richmond",
-        phoneNumber: "1234567890",
-        emailId: "Chris@test.com",
-        address: "1465 East Parkdale Avenue, Manistee, Michigan(MI) 49660",
-        averageNumberofBox: "6",
-        averageNumberofPallets: "4",
-        averageNumberofControls: "12",
-        averageTimeSpent: "3 hours",
-      },
-      {
-        id: 5,
-        state: "complete",
-        time: "09:00 - 12:00",
-        name: "Pharmacy B | SUNS008",
-        start: "2021-05-31 9:00:00",
-        end: "2021-05-31 12:00:00",
-        color: "yellow",
-        duration: "3",
-        orderNumber: "t6UJ9A005GXH",
-        customerName: "Chris Test",
-        phoneNumber: "1234567890",
-        emailId: "chris@test.com",
-        address: "Xyz test test",
-        averageNumberofBox: "6",
-        averageNumberofPallets: "4",
-        averageNumberofControls: "12",
-        averageTimeSpent: "3 hours",
-      },
-      {
-        id: 6,
-        state: "complete",
-        time: "09:00 - 12:00",
-        name: "Pharmacy B | SUNS008",
-        start: "2021-05-30 9:00:00",
-        end: "2021-05-30 12:00:00",
-        color: "yellow",
-        duration: "3",
-        orderNumber: "t6UJ9A005GXH",
-        customerName: "Chris Test",
-        phoneNumber: "1234567890",
-        emailId: "chris@test.com",
-        address: "Xyz test test",
-        averageNumberofBox: "6",
-        averageNumberofPallets: "4",
-        averageNumberofControls: "12",
-        averageTimeSpent: "3 hours",
-      },
-      {
-        id: 7,
-        state: "unconfirmed",
-        time: "05:00 - 06:00",
-        name: "Pharmacy B | SUNS008",
-        start: "2021-05-31 05:00:00",
-        end: "2021-05-31 06:00:00",
-        color: "yellow",
-        duration: "1",
-        orderNumber: "t6UJ9A005GXH",
-        customerName: "Chris Test",
-        phoneNumber: "1234567890",
-        emailId: "chris@test.com",
-        address: "Xyz test test",
-        averageNumberofBox: "6",
-        averageNumberofPallets: "4",
-        averageNumberofControls: "12",
-        averageTimeSpent: "1 hours",
-      },
-      {
-        id: 8,
-        state: "unconfirmed",
-        time: "05:00 - 06:00",
-        name: "Pharmacy B | SUNS008",
-        start: "2021-05-30 05:00:00",
-        end: "2021-05-30 06:00:00",
-        color: "yellow",
-        duration: "1",
-        orderNumber: "t6UJ9A005GXH",
-        customerName: "Chris Test",
-        phoneNumber: "1234567890",
-        emailId: "chris@test.com",
-        address: "Xyz test test",
-        averageNumberofBox: "6",
-        averageNumberofPallets: "4",
-        averageNumberofControls: "12",
-        averageTimeSpent: "1 hours",
-      },
-      {
-        id: 9,
-        state: "cancelled",
-        time: "05:00 - 09:00",
-        name: "Pharmacy C | Encompass",
-        start: "2021-05-27 05:00:00",
-        end: "2021-05-27 09:00:00",
-        color: "red",
-        duration: "4",
-        orderNumber: "333",
-        customerName: "Encompass Test",
-        phoneNumber: "1234567890",
-        emailId: "chris@test.com",
-        address: "Xyz test test",
-        averageNumberofBox: "6",
-        averageNumberofPallets: "4",
-        averageNumberofControls: "12",
-        averageTimeSpent: "3 hours",
-      },
-      {
-        id: 10,
-        state: "confirmed",
-        time: "13:00 - 16:00",
-        name:
-          "Pharmacy C | Encompass Health Rehabilitation Hospital of Richmond",
-        start: "2021-05-27 13:00:00",
-        end: "2021-05-27 16:00:00",
-        color: "green",
-        duration: "3",
-        orderNumber: "t6UJ9A005GXH",
-        customerName: "Encompass Health Rehabilitation Hospital of Richmond",
-        phoneNumber: "1234567890",
-        emailId: "Chris@test.com",
-        address: "1465 East Parkdale Avenue, Manistee, Michigan(MI) 49660",
-        averageNumberofBox: "6",
-        averageNumberofPallets: "4",
-        averageNumberofControls: "12",
-        averageTimeSpent: "3 hours",
-      },
-      {
-        id: 11,
-        state: "paused",
-        time: "01:00 - 05:00",
-        name:
-          "Pharmacy C | Encompass Health Rehabilitation Hospital of Richmond",
-        start: "2021-05-31 01:00:00",
-        end: "2021-05-31 05:00:00",
-        color: "green",
-        duration: "3",
-        orderNumber: "t6UJ9A005GXH",
-        customerName: "Encompass Health Rehabilitation Hospital of Richmond",
-        phoneNumber: "1234567890",
-        emailId: "Chris@test.com",
-        address: "1465 East Parkdale Avenue, Manistee, Michigan(MI) 49660",
-        averageNumberofBox: "6",
-        averageNumberofPallets: "4",
-        averageNumberofControls: "12",
-        averageTimeSpent: "3 hours",
-      },
-      {
-        id: 12,
-        state: "paused",
-        time: "01:00 - 05:00",
-        name:
-          "Pharmacy C | Encompass Health Rehabilitation Hospital of Richmond",
-        start: "2021-05-30 01:00:00",
-        end: "2021-05-30 05:00:00",
-        color: "green",
-        duration: "3",
-        orderNumber: "t6UJ9A005GXH",
-        customerName: "Encompass Health Rehabilitation Hospital of Richmond",
-        phoneNumber: "1234567890",
-        emailId: "Chris@test.com",
-        address: "1465 East Parkdale Avenue, Manistee, Michigan(MI) 49660",
-        averageNumberofBox: "6",
-        averageNumberofPallets: "4",
-        averageNumberofControls: "12",
-        averageTimeSpent: "3 hours",
-      },
-    ],
-    colors: [
-      "blue",
-      "indigo",
-      "deep-purple",
-      "cyan",
-      "green",
-      "orange",
-      "grey darken-1",
-    ],
-    names: [
-      "<h1>Meeting</h1>",
-      "Holiday",
-      "PTO",
-      "Travel",
-      "Event",
-      "Birthday",
-      "Conference",
-      "Party",
-    ],
-    count: 1,
-  }),
-  mounted() {
-    this.$refs.calendar.checkChange();
-  },
-  methods: {
-    viewDay({ date }) {
-      this.focus = date;
-      this.type = "day";
-    },
-    getStatusColor(event) {
-      if (event.state === "complete") {
-        return "#B5FFD9";
-      } else if (event.state === "cancelled") {
-        return "#F9CDD0";
-      } else if (event.state === "confirmed") {
-        return "#E8F4FE";
-      } else if (event.state === "unconfirmed") {
-        return "#EFF0F6";
-      }
-      return "#FFF0D2";
-    },
-    getButtonText(event) {
-      if (event.state === "complete") {
-        return "Service Completed";
-      } else if (event.state === "cancelled") {
-        return "Cancelled Service";
-      } else if (event.state === "confirmed" || event.state === "unconfirmed") {
-        return "Begin Inventory";
-      } else {
-        return "Paused Service";
-      }
-    },
+                {
+                    id: 4,
+                    state: "confirmed",
+                    time: "13:00 - 16:00",
+                    name:
+                        "Test",
+                    start: "2021-05-31 13:00:00",
+                    end: "2021-05-31 16:00:00",
+                    color: "green",
+                    duration: 3,
+                    orderNumber: "t6UJ9A005GXH",
+                    customerName: "Encompass 2",
+                    phoneNumber: "99999",
+                    emailId: "Chris@test.com",
+                    address: "1465 East Parkdale Avenue, Manistee, Michigan(MI) 49660",
+                    averageNumberofBox: "6",
+                    averageNumberofPallets: "4",
+                    averageNumberofControls: "12",
+                    averageTimeSpent: "3 hours",
+                },
+                {
+                    id: 5,
+                    state: "confirmed",
+                    time: "09:00 - 12:00",
+                    name: "Pharmacy B | SUNS008",
+                    start: "2021-05-31 9:00:00",
+                    end: "2021-05-31 12:00:00",
+                    color: "yellow",
+                    duration: 3,
+                    orderNumber: "t6UJ9A005GXH",
+                    customerName: "Chris Test 3",
+                    phoneNumber: "1234567890",
+                    emailId: "chris@test.com",
+                    address: "Xyz test test",
+                    averageNumberofBox: "6",
+                    averageNumberofPallets: "4",
+                    averageNumberofControls: "12",
+                    averageTimeSpent: "3 hours",
+                },        
+                {
+                    id: 7,
+                    state: "confirmed",
+                    time: "05:00 - 06:00",
+                    name: "Pharmacy B | SUNS008",
+                    start: "2021-05-31 05:00:00",
+                    end: "2021-05-31 06:00:00",
+                    color: "yellow",
+                    duration: 1,
+                    orderNumber: "t6UJ9A005GXH",
+                    customerName: "Chris Test 4",
+                    phoneNumber: "1234567890",
+                    emailId: "chris@test.com",
+                    address: "Xyz test test",
+                    averageNumberofBox: "6",
+                    averageNumberofPallets: "4",
+                    averageNumberofControls: "12",
+                    averageTimeSpent: "1 hours",
+                },
+              
+             
+                {
+                    id: 9,
+                    state: "cancelled",
+                    time: "05:00 - 09:00",
+                    name: "Pharmacy C | Encompass",
+                    start: "2021-05-27 05:00:00",
+                    end: "2021-05-27 09:00:00",
+                    color: "red",
+                    duration: 4,
+                    orderNumber: "333",
+                    customerName: "Encompass Test",
+                    phoneNumber: "1234567890",
+                    emailId: "chris@test.com",
+                    address: "Xyz test test",
+                    averageNumberofBox: "6",
+                    averageNumberofPallets: "4",
+                    averageNumberofControls: "12",
+                    averageTimeSpent: "3 hours",
+                },
+                {
+                    id: 10,
+                    state: "confirmed",
+                    time: "13:00 - 16:00",
+                    name:
+                        "Pharmacy C | Encompass Health Rehabilitation Hospital of Richmond",
+                    start: "2021-05-27 13:00:00",
+                    end: "2021-05-27 16:00:00",
+                    color: "green",
+                    duration: 3,
+                    orderNumber: "t6UJ9A005GXH",
+                    customerName: "Encompass Health Rehabilitation Hospital of Richmond",
+                    phoneNumber: "1234567890",
+                    emailId: "Chris@test.com",
+                    address: "1465 East Parkdale Avenue, Manistee, Michigan(MI) 49660",
+                    averageNumberofBox: "6",
+                    averageNumberofPallets: "4",
+                    averageNumberofControls: "12",
+                    averageTimeSpent: "3 hours",
+                },
+                {
+                    id: 11,
+                    state: "confirmed",
+                    time: "01:00 - 05:00",
+                    name:
+                        "Pharmacy C | Test",
+                    start: "2021-05-31 01:00:00",
+                    end: "2021-05-31 05:00:00",
+                    color: "green",
+                    duration: 4,
+                    orderNumber: "t6UJ9A005GXH",
+                    customerName: "Encompass 5",
+                    phoneNumber: "1234567890",
+                    emailId: "Chris@test.com",
+                    address: "1465 East Parkdale Avenue, Manistee, Michigan(MI) 49660",
+                    averageNumberofBox: "6",
+                    averageNumberofPallets: "4",
+                    averageNumberofControls: "12",
+                    averageTimeSpent: "3 hours",
+                },
+               
+            ],
+        }),
+ 
+        methods: {
+            viewDay({ date }) {
+                this.focus = date;
+                this.type = "day";
+            },
+            getStatusColor(event) {
+                if (event.state === "complete") {
+                    return "#B5FFD9";
+                } else if (event.state === "cancelled") {
+                    return "#F9CDD0";
+                } else if (event.state === "confirmed") {
+                    return "#E8F4FE";
+                } else if (event.state === "unconfirmed") {
+                    return "#EFF0F6";
+                }
+                return "#FFF0D2";
+            },
+            getButtonText(event) {
+                if (event.state === "complete") {
+                    return "Service Completed";
+                } else if (event.state === "cancelled") {
+                    return "Cancelled Service";
+                } else if (event.state === "confirmed" || event.state === "unconfirmed") {
+                    return "Begin Inventory";
+                } else {
+                    return "Paused Service";
+                }
+            },
 
-    getButtonIcon(event) {
-      if (event.state === "complete") {
-        return "mdi-checkbox-marked-circle";
-      } else if (event.state === "cancelled") {
-        return "mdi-close-circle";
-      } else if (event.state === "confirmed" || event.state === "unconfirmed") {
-        return "mdi-checkbox-marked-circle";
-      } else {
-        return "mdi-pause-circle";
-      }
-    },
+            getButtonIcon(event) {
+                if (event.state === "complete") {
+                    return "mdi-checkbox-marked-circle";
+                } else if (event.state === "cancelled") {
+                    return "mdi-close-circle";
+                } else if (event.state === "confirmed" || event.state === "unconfirmed") {
+                    return "mdi-checkbox-marked-circle";
+                } else {
+                    return "mdi-pause-circle";
+                }
+            },
 
-    getDarkStatusColor(event) {
-      if (event.state === "complete") {
-        return "#0DBA61";
-      } else if (event.state === "cancelled") {
-        return "#B30000";
-      } else if (event.state === "confirmed") {
-        return "#0063A7";
-      } else if (event.state === "unconfirmed") {
-        return "#76777A";
-      }
-      return "#FDB825";
-    },
+            getDarkStatusColor(event) {
+                if (event.state === "complete") {
+                    return "#0DBA61";
+                } else if (event.state === "cancelled") {
+                    return "#B30000";
+                } else if (event.state === "confirmed") {
+                    return "#0063A7";
+                } else if (event.state === "unconfirmed") {
+                    return "#76777A";
+                }
+                return "#FDB825";
+            },
 
-    IsStatusMatched(arr, val) {
-      return arr.some(function (arrVal) {
-        return val === arrVal.state;
-      });
-    },
+            IsStatusMatched(arr, val) {
+                return arr.some(function (arrVal) {
+                    return val === arrVal.state;
+                });
+            },
 
-    setBoderColorToCard(event) {
-      if (event.state === "complete") {
-        return "completeBorderColor";
-      } else if (event.state === "cancelled") {
-        return "cancelledBorderColor";
-      } else if (event.state === "confirmed") {
-        return "confirmedBorderColor";
-      } else if (event.state === "unconfirmed") {
-        return "unconfirmedBorderColor";
-      }
-      return "pausedBorderColor";
-    },
-    functionEvents(date) {
-      var colorArray = [];
-      var filterdEvents = this.events.filter(
-        (s) => s.start.split(" ")[0] === date.toString()
-      );
+            setBoderColorToCard(event) {
+                if (event.state === "complete") {
+                    return "completeBorderColor";
+                } else if (event.state === "cancelled") {
+                    return "cancelledBorderColor";
+                } else if (event.state === "confirmed") {
+                    return "confirmedBorderColor";
+                } else if (event.state === "unconfirmed") {
+                    return "unconfirmedBorderColor";
+                }
+                return "pausedBorderColor";
+            },
+            functionEvents(date) {
+                var colorArray = [];
+                var filterdEvents = this.events.filter(
+                    (s) => s.start.split(" ")[0] === date.toString()
+                );
 
-      if (filterdEvents != null && filterdEvents.length > 0) {
-        var isCompleted = this.IsStatusMatched(filterdEvents, "complete");
-        var isCancelled = this.IsStatusMatched(filterdEvents, "cancelled");
-        var isConfirmed = this.IsStatusMatched(filterdEvents, "cancelled");
-        var isUnconfirmed = this.IsStatusMatched(filterdEvents, "unconfirmed");
-        var isPaused = this.IsStatusMatched(filterdEvents, "paused");
-        if (isCompleted) colorArray.push("#0DBA61");
-        if (isCancelled) colorArray.push("#B30000");
-        if (isConfirmed) colorArray.push("#0063A7");
-        if (isUnconfirmed) colorArray.push("#76777A");
-        if (isPaused) colorArray.push("#FDB825");
-        return colorArray;
-      }
-      return false;
-    },
-    setToday() {
-      this.focus = "";
-    },
-    prev() {
-      this.$refs.calendar.prev();
-    },
-    next() {
-      this.$refs.calendar.next();
-    },
-    showEvent({ nativeEvent, event }) {
-      const open = () => {
-        this.selectedEvent = event;
-        this.selectedElement = nativeEvent.target;
-        requestAnimationFrame(() =>
-          requestAnimationFrame(() => (this.selectedOpen = true))
-        );
-      };
+                if (filterdEvents != null && filterdEvents.length > 0) {
+                    var isCompleted = this.IsStatusMatched(filterdEvents, "complete");
+                    var isCancelled = this.IsStatusMatched(filterdEvents, "cancelled");
+                    var isConfirmed = this.IsStatusMatched(filterdEvents, "confirmed");
+                    var isUnconfirmed = this.IsStatusMatched(filterdEvents, "unconfirmed");
+                    var isPaused = this.IsStatusMatched(filterdEvents, "paused");
+                    if (isCompleted) colorArray.push("#0DBA61");
+                    if (isCancelled) colorArray.push("#B30000");
+                    if (isConfirmed) colorArray.push("#0063a7");
+                    if (isUnconfirmed) colorArray.push("#76777A");
+                    if (isPaused) colorArray.push("#FDB825");
+                    return colorArray;
+                }
+                return false;
+            },
+            prev() {
+                this.$refs.calendar.prev();
+            },
+            next() {
+                this.$refs.calendar.next();
+            },
+            showEvent({ nativeEvent, event }) {
+                const open = () => {
+                    this.selectedEvent = event;
+                    this.selectedElement = nativeEvent.target;
+                    requestAnimationFrame(() =>
+                        requestAnimationFrame(() => (this.selectedOpen = true))
+                    );
+                };
 
-      if (this.selectedOpen) {
-        this.selectedOpen = false;
-        requestAnimationFrame(() => requestAnimationFrame(() => open()));
-      } else {
-        open();
-      }
+                if (this.selectedOpen) {
+                    this.selectedOpen = false;
+                    requestAnimationFrame(() => requestAnimationFrame(() => open()));
+                } else {
+                    open();
+                }
 
-      nativeEvent.stopPropagation();
-    },
-    rnd(a, b) {
-      return Math.floor((b - a + 1) * Math.random()) + a;
-    },
+                nativeEvent.stopPropagation();
+            },    
+            allowedDates(val) {
+                var nextDate = new Date();
+                nextDate.setDate(nextDate.getDate() + 21);
+                var previousDate = new Date();
+                previousDate.setDate(previousDate.getDate() - 7);
+                var currentDate = new Date(val);
 
-    allowedDates(val) {
-      var nextDate = new Date();
-      nextDate.setDate(nextDate.getDate() + 21);
-      var previousDate = new Date();
-      previousDate.setDate(previousDate.getDate() - 7);
-      var currentDate = new Date(val);
+                if (
+                    currentDate.getTime() >= previousDate.getTime() &&
+                    currentDate.getTime() <= nextDate.getTime()
+                )
+                    return true;
+                return false;
+            },
+            goToServiceBook()
+            {
+                this.$router.push("/ServiceBook");
+            },
 
-      if (
-        currentDate.getTime() >= previousDate.getTime() &&
-        currentDate.getTime() <= nextDate.getTime()
-      )
-        return true;
-      return false;
-    },
-  },
-  computed: {
-    todaysEvent: function () {
-      var selectedDate = this.focus;
-      console.log(new Date(this.events[0].start).toISOString().substr(0, 10));
-      return this.events.filter(function (event) {
-        var startDate = new Date(event.start).toISOString().substr(0, 10);
-        return selectedDate === startDate;
-      });
-    },
-  },
-};
+            totalWorkingHours() {
+                var totalhours = 0;
+                for (var index = 0; index < this.todaysEvent.length; index++) {
+                    totalhours = parseInt(totalhours) + parseInt(this.todaysEvent[index].duration);
+                }
+            
+                return totalhours;
+            },
+        },
+        computed: {
+            todaysEvent: function () {
+                var selectedDate = this.focus;
+                return this.events.filter(function (event) {
+                    var eventStartDate = new Date(event.start);
+                    var eventMonth = eventStartDate.getMonth() + 1;
+                    var eventDay = eventStartDate.getDate();             
+                    var startDate = eventStartDate.getFullYear() + "-" + ('0' + eventMonth).slice(-2) + "-" + ('0' + eventDay).slice(-2)
+                    return (selectedDate === startDate && event.state === "confirmed")
+                });
+            },
+        },
+    };
 </script>
 
 
